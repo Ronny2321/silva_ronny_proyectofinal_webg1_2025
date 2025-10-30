@@ -34,12 +34,7 @@ const Nav = ({ user, role }) => {
           <Link className={`menu-link ${isActive("/") ? "active" : ""}`} to="/">
             Noticias
           </Link>
-          <a className="menu-link" href="/home#tecnologia">
-            Tecnología
-          </a>
-          <a className="menu-link" href="/home#deportes">
-            Deportes
-          </a>
+          
         </nav>
 
         <div className="actions">
