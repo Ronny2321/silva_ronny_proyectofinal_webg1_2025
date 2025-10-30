@@ -1,0 +1,50 @@
+@import "../Login/Login.css";
+
+.banner-success {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.group-title {
+    margin: 12px 0 4px;
+    font-size: .95rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-transform: none;
+}
+
+.field.ok input {
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, .15);
+}
+
+.field.bad input {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, .15);
+}
+
+.hint-inline {
+    font-size: .85rem;
+    margin: -6px 0 6px;
+}
+
+.hint-inline.ok {
+    color: #059669;
+}
+
+.hint-inline.bad {
+    color: #dc2626;
+}
+
+.select {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 0 12px;
+    background: #fff;
+}
