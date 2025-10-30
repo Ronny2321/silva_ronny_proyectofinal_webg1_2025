@@ -16,6 +16,7 @@ export default function Categorias() {
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
   const [confirm, setConfirm] = useState({ open: false, id: null, name: "" });
+  const [notice, setNotice] = useState({ open: false, title: "", text: "" });
 
   const canAdd = useMemo(() => newName.trim().length > 0, [newName]);
   const canSaveEdit = useMemo(
@@ -29,6 +30,11 @@ export default function Categorias() {
     try {
       await addDoc(collection(db, "categoria"), { Nombre: name });
       setNewName("");
+      setNotice({
+        open: true,
+        title: "Categoría creada",
+        text: `Se creó "${name}" correctamente.`,
+      });
     } catch (e) {
       console.error("No se pudo agregar la categoría", e);
       alert("Error agregando la categoría");
@@ -50,8 +56,14 @@ export default function Categorias() {
     try {
       const current = docs.find((d) => d.id === editingId);
       if (!current) return;
+      const newValue = editingName.trim();
       await updateDoc(doc(db, current.collection, editingId), {
-        Nombre: editingName.trim(),
+        Nombre: newValue,
+      });
+      setNotice({
+        open: true,
+        title: "Categoría actualizada",
+        text: `Se actualizó a "${newValue}" correctamente.`,
       });
       cancelEdit();
     } catch (e) {
@@ -76,8 +88,14 @@ export default function Categorias() {
   const closeModal = () => setConfirm({ open: false, id: null, name: "" });
   const confirmRemove = async () => {
     if (!confirm.id) return;
+    const deletedName = confirm.name;
     await removeItem(confirm.id);
     closeModal();
+    setNotice({
+      open: true,
+      title: "Categoría eliminada",
+      text: `Se eliminó "${deletedName}" correctamente.`,
+    });
   };
 
   return (
@@ -293,6 +311,44 @@ export default function Categorias() {
               </button>
               <button className="btn-danger" onClick={confirmRemove}>
                 Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {notice.open && (
+        <div
+          className="modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ok-title"
+        >
+          <div className="modal-card">
+            <div className="modal-icon success" aria-hidden>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            </div>
+            <h3 id="ok-title" className="modal-title">
+              {notice.title}
+            </h3>
+            <p className="modal-text">{notice.text}</p>
+            <div className="modal-actions">
+              <button
+                className="btn-primary"
+                onClick={() => setNotice({ open: false, title: "", text: "" })}
+              >
+                Entendido
               </button>
             </div>
           </div>

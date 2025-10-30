@@ -18,6 +18,21 @@
     font-weight: 800;
     color: #0f172a;
     font-family: Merriweather, Georgia, serif;
+    .modal-icon {
+         width: 44px;
+         height: 44px;
+         border-radius: 9999px;
+         display: grid;
+         place-items: center;
+         margin-bottom: 8px;
+         border: 1px solid #e5e7eb;
+         color: #0f172a;
+    }
+    .modal-icon.success {
+         background: #ecfdf5;
+         color: #047857;
+         border-color: #a7f3d0;
+    }
 }
 
 .cat-sub {
