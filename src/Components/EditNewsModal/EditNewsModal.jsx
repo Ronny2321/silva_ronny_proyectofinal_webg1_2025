@@ -1,9 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "../Modal/Modal.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
+  const CATEGORIES = useMemo(
+    () => [
+      "General",
+      "Tecnología",
+      "Política",
+      "Deportes",
+      "Economía",
+      "Salud",
+      "Cultura",
+      "Entretenimiento",
+      "Ciencia",
+      "Internacional",
+      "Nacional",
+    ],
+    []
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -53,6 +69,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         subtitulo: form.subtitulo || "",
         contenido: form.contenido || "",
         section: form.section || "",
+        categoria: form.section || "",
         imagen: form.imagen || "",
         updatedAt: serverTimestamp(),
       });
@@ -103,12 +120,17 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
           rows={6}
           disabled={role === "Reportero" && published}
         />
-        <input
-          value={form.section}
+        <select
+          value={form.section || form.categoria || "General"}
           onChange={(e) => setForm({ ...form, section: e.target.value })}
-          placeholder="Sección o categoría"
           disabled={role === "Reportero" && published}
-        />
+        >
+          {CATEGORIES.map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
         <input
           type="url"
           value={form.imagen}

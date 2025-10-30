@@ -15,6 +15,23 @@ const NewsForm = ({ role }) => {
     [role]
   );
 
+  const CATEGORIES = useMemo(
+    () => [
+      "General",
+      "Tecnología",
+      "Política",
+      "Deportes",
+      "Economía",
+      "Salud",
+      "Cultura",
+      "Entretenimiento",
+      "Ciencia",
+      "Internacional",
+      "Nacional",
+    ],
+    []
+  );
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setCurrentUser(u));
     return () => unsub();
@@ -42,9 +59,8 @@ const NewsForm = ({ role }) => {
         placeholder="Contenido"
         onChange={(e) => setNoticia({ ...noticia, contenido: e.target.value })}
       ></textarea>
-      <input
-        type="text"
-        placeholder="Categoría"
+      <select
+        value={noticia.section || noticia.categoria || "General"}
         onChange={(e) =>
           setNoticia({
             ...noticia,
@@ -52,7 +68,13 @@ const NewsForm = ({ role }) => {
             categoria: e.target.value,
           })
         }
-      />
+      >
+        {CATEGORIES.map((name) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
       <select
         value={noticia.status || noticia.estado || "Edición"}
         onChange={(e) => {

@@ -4,6 +4,7 @@ import NewsCard from "../NewsCard/NewsCard.jsx";
 import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Link } from "react-router-dom";
 import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
 
 const News = ({ role }) => {
@@ -36,6 +37,11 @@ const News = ({ role }) => {
 
   return (
     <main>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <Link to="/crear">
+          <button>Crear noticia</button>
+        </Link>
+      </div>
       {news.length > 0 ? (
         news.map((n) => (
           <div key={n.id} style={{ marginBottom: 12 }}>

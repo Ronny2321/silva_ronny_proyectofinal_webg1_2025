@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header/Header.jsx";
 import News from "./Components/News/News.jsx";
 import NewsForm from "./Components/NewsForm/NewsForm.jsx";
+import CreateNews from "./pages/CreateNews.jsx";
 import db, { auth } from "./FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import Login from "./pages/Login.jsx";
@@ -63,8 +64,17 @@ function App() {
             usuario ? (
               <>
                 <News role={role} />
-                <NewsForm user={usuario} role={role} />
               </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/crear"
+          element={
+            usuario ? (
+              <CreateNews role={role} />
             ) : (
               <Navigate to="/login" replace />
             )
