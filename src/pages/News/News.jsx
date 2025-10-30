@@ -26,7 +26,7 @@ const News = ({ role }) => {
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [catFilter, setCatFilter] = useState("Todas");
   const [page, setPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 6;
 
   const { categories: CATEGORIES } = useCategoriesCollection(["Todas"]);
 
@@ -163,8 +163,12 @@ const News = ({ role }) => {
             ))}
           </select>
           {role !== "Editor" && (
-            <Link className="btn-pill create" to="/crear">
-              + Nueva
+            <Link className="btn-primary btn-create" to="/crear" aria-label="Crear nueva noticia">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
+              </svg>
+              Crear noticia
             </Link>
           )}
         </div>
@@ -216,14 +220,15 @@ const News = ({ role }) => {
                 })()
               ) : n.estado !== "Publicado" ? (
                 <button
-                  className="icon-btn"
+                  className="edit-btn"
                   title="Editar"
+                  aria-label={`Editar ${n.titulo || 'noticia'}`}
                   onClick={() => {
                     setEditingId(n.id);
                     setIsModalOpen(true);
                   }}
                 >
-                  <svg
+                    <svg
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
@@ -237,7 +242,7 @@ const News = ({ role }) => {
                     <path d="M12 20h9" />
                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
                   </svg>
-                  Editar
+                    Editar
                 </button>
               ) : (
                 <span className="muted">Publicado</span>

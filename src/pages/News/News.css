@@ -75,6 +75,38 @@
     align-items: center;
 }
 
+.btn-create {
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.btn-create svg {
+    margin-right: 2px;
+}
+
+.btn-create:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 8px 18px rgba(30, 58, 138, .2);
+}
+
+.btn-create:active {
+    transform: translateY(1px);
+}
+
+.btn-create:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, .18);
+}
+
 .summary {
     display: inline-flex;
     gap: 8px;
@@ -155,6 +187,33 @@
 
 .icon-btn:hover {
     background: #f8fafc;
+}
+
+.edit-btn {
+    height: 34px;
+    padding: 0 12px;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    border: 1px solid var(--accent);
+    border-radius: 9999px;
+    background: #fff;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background: color-mix(in oklab, var(--accent) 8%, #ffffff);
+}
+
+.edit-btn:active {
+    transform: translateY(1px);
+}
+
+.edit-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, .18);
 }
 
 .pager {
