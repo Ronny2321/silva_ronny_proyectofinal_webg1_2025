@@ -3,10 +3,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header/Header.jsx";
 import News from "./Components/News/News.jsx";
-import NewsForm from "./Components/NewsForm/NewsForm.jsx";
 import CreateNews from "./pages/CreateNews.jsx";
 import db, { auth } from "./FirebaseConfig/FirebaseConfig.js";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
@@ -22,16 +21,11 @@ function App() {
         try {
           const ref = doc(db, "users", u.uid);
           const snap = await getDoc(ref);
-          if (!snap.exists()) {
-            await setDoc(ref, {
-              email: u.email,
-              role: "Reportero",
-              createdAt: serverTimestamp(),
-            });
-            setRole("Reportero");
-          } else {
+          if (snap.exists()) {
             const data = snap.data();
             setRole(data.role || "Reportero");
+          } else {
+            setRole("Reportero");
           }
         } catch (e) {
           console.error("Error cargando rol de usuario", e);
@@ -74,7 +68,11 @@ function App() {
           path="/crear"
           element={
             usuario ? (
-              <CreateNews role={role} />
+              role === "Editor" ? (
+                <Navigate to="/" replace />
+              ) : (
+                <CreateNews role={role} />
+              )
             ) : (
               <Navigate to="/login" replace />
             )

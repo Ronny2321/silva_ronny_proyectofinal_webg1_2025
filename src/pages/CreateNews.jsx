@@ -95,11 +95,10 @@ const CreateNews = ({ role }) => {
           rows={6}
         />
         <select
-          value={noticia.section || noticia.categoria || "General"}
+          value={noticia.categoria || "General"}
           onChange={(e) =>
             setNoticia({
               ...noticia,
-              section: e.target.value,
               categoria: e.target.value,
             })
           }
@@ -111,13 +110,12 @@ const CreateNews = ({ role }) => {
           ))}
         </select>
         <select
-          value={noticia.status || noticia.estado || "Edición"}
+          value={noticia.estado || noticia.estado || "Edición"}
           onChange={(e) => {
             const val = e.target.value;
             setNoticia({
               ...noticia,
               estado: val,
-              status: val,
             });
           }}
         >

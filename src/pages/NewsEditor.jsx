@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import db, { storage } from "../FirebaseConfig/FirebaseConfig";
+import db, { storage, auth } from "../FirebaseConfig/FirebaseConfig";
 import {
   addDoc,
   collection,
@@ -11,13 +11,13 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth } from "../FirebaseConfig/FirebaseConfig";
+import { doc as docRef, getDoc as getDocOnce } from "firebase/firestore";
 
 const initial = {
   titulo: "",
   subtitulo: "",
   contenido: "",
-  section: "General",
+  categoria: "General",
   imagen: "",
   status: "Edición",
 };
@@ -28,24 +28,58 @@ const NewsEditor = () => {
   const [form, setForm] = useState(initial);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [sections, setSections] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [role, setRole] = useState("Reportero");
+
+  const editorTransitions = useMemo(
+    () => (current) => {
+      const s = current || "Edición";
+      if (s === "Edición") return [s];
+      if (s === "Terminado") return [s, "Publicado", "Desactivado"];
+      if (s === "Publicado") return [s, "Desactivado"];
+      if (s === "Desactivado") return [s, "Publicado"];
+      return [s];
+    },
+    []
+  );
 
   useEffect(() => {
     const load = async () => {
       if (!id) return;
       const refDoc = doc(db, "Noticias", id);
       const snap = await getDoc(refDoc);
-      if (snap.exists()) setForm({ ...initial, ...snap.data() });
+      if (snap.exists()) {
+        const data = snap.data();
+        setForm({
+          ...initial,
+          ...data,
+          status: data.status || data.estado || "Edición",
+        });
+      }
     };
     load();
   }, [id]);
 
   useEffect(() => {
-    const loadSections = async () => {
-      const snap = await getDocs(collection(db, "Secciones"));
-      setSections(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    const loadCategorias = async () => {
+      const snap = await getDocs(collection(db, "Categorias"));
+      setCategorias(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     };
-    loadSections();
+    loadCategorias();
+  }, []);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      try {
+        const r = await getDocOnce(docRef(db, "users", uid));
+        if (r.exists()) setRole(r.data().role || "Reportero");
+      } catch (e) {
+        console.error("Error cargando rol", e);
+      }
+    };
+    fetchRole();
   }, []);
 
   const onSubmit = async (e) => {
@@ -59,11 +93,20 @@ const NewsEditor = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
+      const current = form.status || form.estado || "Edición";
+      const allowedNow =
+        role === "Editor"
+          ? editorTransitions(current)
+          : ["Edición", "Terminado"];
+      const finalStatus = allowedNow.includes(current) ? current : "Edición";
+
       if (id) {
         await updateDoc(doc(db, "Noticias", id), {
           ...form,
           imagen: imageUrl,
-          updatedAt: serverTimestamp(),
+          estado: finalStatus,
+          status: finalStatus,
+          fechaActualizacion: serverTimestamp(),
         });
       } else {
         const colRef = collection(db, "Noticias");
@@ -72,8 +115,10 @@ const NewsEditor = () => {
           imagen: imageUrl,
           authorId: auth.currentUser?.uid || "",
           autor: auth.currentUser?.email || "",
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+          estado: finalStatus,
+          status: finalStatus,
+          fechaCreacion: serverTimestamp(),
+          fechaActualizacion: serverTimestamp(),
         });
       }
       nav("/");
@@ -88,6 +133,26 @@ const NewsEditor = () => {
     <div>
       <h3>{id ? "Editar" : "Crear"} noticia</h3>
       <form onSubmit={onSubmit}>
+        <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
+          Estado:
+          <select
+            value={form.status || form.estado || "Edición"}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+            disabled={
+              role === "Editor" &&
+              (form.status || form.estado || "Edición") === "Edición"
+            }
+          >
+            {(role === "Editor"
+              ? editorTransitions(form.status || form.estado || "Edición")
+              : ["Edición", "Terminado"]
+            ).map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </label>
         <input
           value={form.titulo}
           onChange={(e) => setForm({ ...form, titulo: e.target.value })}
@@ -105,11 +170,11 @@ const NewsEditor = () => {
           placeholder="Contenido"
         />
         <select
-          value={form.section}
-          onChange={(e) => setForm({ ...form, section: e.target.value })}
+          value={form.categoria}
+          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
         >
           <option value="General">General</option>
-          {sections.map((s) => (
+          {categorias.map((s) => (
             <option key={s.id} value={s.name}>
               {s.name}
             </option>

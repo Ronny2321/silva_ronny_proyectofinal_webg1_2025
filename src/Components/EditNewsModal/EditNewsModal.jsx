@@ -4,6 +4,17 @@ import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
+  const editorTransitions = useMemo(
+    () => (current) => {
+      const s = current || "Edición";
+      if (s === "Edición") return [s];
+      if (s === "Terminado") return [s, "Publicado", "Desactivado"];
+      if (s === "Publicado") return [s, "Desactivado"];
+      if (s === "Desactivado") return [s, "Publicado"];
+      return [s];
+    },
+    []
+  );
   const CATEGORIES = useMemo(
     () => [
       "General",
@@ -26,10 +37,11 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
     titulo: "",
     subtitulo: "",
     contenido: "",
-    section: "",
+    categoria: "",
     imagen: "",
   });
   const [published, setPublished] = useState(false);
+  const [status, setStatus] = useState("Edición");
 
   useEffect(() => {
     const load = async () => {
@@ -43,9 +55,11 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
           setError("La noticia no existe");
           return;
         }
-        const data = snap.data();
-        setForm((f) => ({ ...f, ...data }));
-        const pub = (data.estado || data.status) === "Publicado";
+  const data = snap.data();
+  setForm((f) => ({ ...f, ...data }));
+  const currentStatus = data.status || data.estado || "Edición";
+  setStatus(currentStatus);
+  const pub = currentStatus === "Publicado";
         setPublished(pub);
       } catch (e) {
         console.error(e);
@@ -68,9 +82,10 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         titulo: form.titulo || "",
         subtitulo: form.subtitulo || "",
         contenido: form.contenido || "",
-        section: form.section || "",
-        categoria: form.section || "",
+        categoria: form.categoria || "",
         imagen: form.imagen || "",
+        estado: status,
+        status,
         updatedAt: serverTimestamp(),
       });
       onClose?.(true);
@@ -101,6 +116,26 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
     >
       {error && <p style={{ color: "crimson" }}>{error}</p>}
       <div style={{ display: "grid", gap: 12 }}>
+        <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
+          Estado:
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            disabled={
+              (role === "Reportero" && published) ||
+              (role === "Editor" && status === "Edición")
+            }
+          >
+            {(role === "Editor"
+              ? editorTransitions(status)
+              : ["Edición", "Terminado"]
+            ).map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </label>
         <input
           value={form.titulo}
           onChange={(e) => setForm({ ...form, titulo: e.target.value })}
@@ -121,8 +156,8 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
           disabled={role === "Reportero" && published}
         />
         <select
-          value={form.section || form.categoria || "General"}
-          onChange={(e) => setForm({ ...form, section: e.target.value })}
+          value={form.categoria || "General"}
+          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
           disabled={role === "Reportero" && published}
         >
           {CATEGORIES.map((name) => (
