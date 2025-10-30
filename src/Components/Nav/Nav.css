@@ -310,4 +310,9 @@
     .actions-desktop {
         display: inline-flex;
     }
+
+    .mobile-overlay,
+    .mobile-panel {
+        display: none !important;
+    }
 }
