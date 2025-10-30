@@ -1,11 +1,19 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 
-const NewsForm = () => {
+const NewsForm = ({ role }) => {
   const [noticia, setNoticia] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
+
+  const allowedStatuses = useMemo(
+    () =>
+      role === "Editor"
+        ? ["Edición", "Terminado", "Publicado", "Desactivado"]
+        : ["Edición", "Terminado"],
+    [role]
+  );
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setCurrentUser(u));
@@ -36,7 +44,7 @@ const NewsForm = () => {
       ></textarea>
       <input
         type="text"
-        placeholder="Categoría / Sección"
+        placeholder="Categoría"
         onChange={(e) =>
           setNoticia({
             ...noticia,
@@ -46,30 +54,36 @@ const NewsForm = () => {
         }
       />
       <select
-        defaultValue="Edición"
-        onChange={(e) =>
+        value={noticia.status || noticia.estado || "Edición"}
+        onChange={(e) => {
+          const val = e.target.value;
           setNoticia({
             ...noticia,
-            estado: e.target.value,
-            status: e.target.value,
-          })
-        }
+            estado: val,
+            status: val,
+          });
+        }}
       >
-        <option value="Edición">Edición</option>
-        <option value="Terminado">Terminado</option>
-        <option value="Publicado">Publicado</option>
-        <option value="Desactivado">Desactivado</option>
+        {allowedStatuses.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
       </select>
       <button
         onClick={async () => {
           try {
             const colRef = collection(db, "Noticias");
             const nowHuman = new Date().toLocaleDateString("es-CO");
+            const chosen = noticia.status ?? noticia.estado ?? "Edición";
+            const finalStatus = allowedStatuses.includes(chosen)
+              ? chosen
+              : "Edición";
             await addDoc(colRef, {
               ...noticia,
               contenido: noticia.contenido ?? noticia.noticia,
-              section: noticia.section ?? noticia.categoria,
-              estado: noticia.estado ?? "Edición",
+              categoria: noticia.categoria ?? noticia.categoria,
+              estado: finalStatus,
               autor: currentUser?.email || "",
               authorId: currentUser?.uid || "",
               fechaCreacion: nowHuman,

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../FirebaseConfig/FirebaseConfig";
+import db, { auth } from "../FirebaseConfig/FirebaseConfig";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const translate = (code) => {
   const map = {
@@ -23,6 +24,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [role, setRole] = useState("Reportero");
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -42,8 +44,14 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      await signOut(auth); 
+      const selectedRole = role === "Editor" ? "Editor" : "Reportero";
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, "users", cred.user.uid), {
+        email: cred.user.email,
+        role: selectedRole,
+        createdAt: serverTimestamp(),
+      });
+      await signOut(auth);
       navigate("/login", { replace: true });
     } catch (e) {
       setErr(translate(e.code) || "Error al crear la cuenta.");
@@ -77,6 +85,11 @@ const Register = () => {
           onChange={(e) => setConfirm(e.target.value)}
           required
         />
+        <label style={{ display: "block", margin: "8px 0 4px" }}>Rol</label>
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="Reportero">Reportero</option>
+          <option value="Editor">Editor</option>
+        </select>
         <button type="submit" disabled={loading}>
           {loading ? "Creando..." : "Registrarme"}
         </button>
