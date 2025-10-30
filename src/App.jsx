@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header/Header.jsx";
-import News from "./Components/News/News.jsx";
+import News from "./pages/News.jsx";
 import CreateNews from "./pages/CreateNews.jsx";
 import db, { auth } from "./FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
