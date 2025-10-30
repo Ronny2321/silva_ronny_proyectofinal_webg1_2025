@@ -19,7 +19,7 @@ const initial = {
   contenido: "",
   categoria: "General",
   imagen: "",
-  status: "Edición",
+  estado: "Edición",
 };
 
 const NewsEditor = () => {
@@ -53,7 +53,7 @@ const NewsEditor = () => {
         setForm({
           ...initial,
           ...data,
-          status: data.status || data.estado || "Edición",
+          estado: data.estado || "Edición",
         });
       }
     };
@@ -93,7 +93,7 @@ const NewsEditor = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      const current = form.status || form.estado || "Edición";
+      const current = form.estado || "Edición";
       const allowedNow =
         role === "Editor"
           ? editorTransitions(current)
@@ -105,7 +105,6 @@ const NewsEditor = () => {
           ...form,
           imagen: imageUrl,
           estado: finalStatus,
-          status: finalStatus,
           fechaActualizacion: serverTimestamp(),
         });
       } else {
@@ -116,7 +115,6 @@ const NewsEditor = () => {
           authorId: auth.currentUser?.uid || "",
           autor: auth.currentUser?.email || "",
           estado: finalStatus,
-          status: finalStatus,
           fechaCreacion: serverTimestamp(),
           fechaActualizacion: serverTimestamp(),
         });
@@ -136,15 +134,15 @@ const NewsEditor = () => {
         <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
           Estado:
           <select
-            value={form.status || form.estado || "Edición"}
-            onChange={(e) => setForm({ ...form, status: e.target.value })}
+            value={form.estado || "Edición"}
+            onChange={(e) => setForm({ ...form, estado: e.target.value })}
             disabled={
               role === "Editor" &&
-              (form.status || form.estado || "Edición") === "Edición"
+              (form.estado || "Edición") === "Edición"
             }
           >
             {(role === "Editor"
-              ? editorTransitions(form.status || form.estado || "Edición")
+              ? editorTransitions(form.estado || "Edición")
               : ["Edición", "Terminado"]
             ).map((s) => (
               <option key={s} value={s}>

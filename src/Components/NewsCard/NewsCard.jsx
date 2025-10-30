@@ -6,6 +6,27 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 
 const NewsCard = ({ news }) => {
+  const fmtDate = (val) => {
+    if (!val) return "";
+    if (typeof val === "string") return val;
+    // Firestore Timestamp
+    if (val?.toDate instanceof Function) {
+      try {
+        return val.toDate().toLocaleDateString("es-CO");
+      } catch {
+        return "";
+      }
+    }
+    if (val?.seconds) {
+      try {
+        return new Date(val.seconds * 1000).toLocaleDateString("es-CO");
+      } catch {
+        return "";
+      }
+    }
+    if (val instanceof Date) return val.toLocaleDateString("es-CO");
+    return String(val);
+  };
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
@@ -33,7 +54,8 @@ const NewsCard = ({ news }) => {
             component="div"
             sx={{ color: "text.secondary" }}
           >
-            Fecha creación: {news.fechaCreacion || news.fecha}
+            Fecha creación:{" "}
+            {fmtDate(news.createdAt || news.fechaCreacion || news.fecha)}
           </Typography>
           {news.fechaActualizacion && (
             <Typography
@@ -41,7 +63,8 @@ const NewsCard = ({ news }) => {
               component="div"
               sx={{ color: "text.secondary" }}
             >
-              Fecha actualización: {news.fechaActualizacion}
+              Fecha actualización:{" "}
+              {fmtDate(news.fechaActualizacion)}
             </Typography>
           )}
           {news.contenido && (

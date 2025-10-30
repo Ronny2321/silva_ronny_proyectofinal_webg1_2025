@@ -41,7 +41,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
     imagen: "",
   });
   const [published, setPublished] = useState(false);
-  const [status, setStatus] = useState("Edición");
+  const [estado, setStatus] = useState("Edición");
 
   useEffect(() => {
     const load = async () => {
@@ -84,9 +84,8 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         contenido: form.contenido || "",
         categoria: form.categoria || "",
         imagen: form.imagen || "",
-        estado: status,
-        status,
-        updatedAt: serverTimestamp(),
+        estado: estado,
+        fechaActualizacion: serverTimestamp(),
       });
       onClose?.(true);
     } catch (e) {
@@ -119,15 +118,15 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
           Estado:
           <select
-            value={status}
+            value={estado}
             onChange={(e) => setStatus(e.target.value)}
             disabled={
               (role === "Reportero" && published) ||
-              (role === "Editor" && status === "Edición")
+              (role === "Editor" && estado === "Edición")
             }
           >
             {(role === "Editor"
-              ? editorTransitions(status)
+              ? editorTransitions(estado)
               : ["Edición", "Terminado"]
             ).map((s) => (
               <option key={s} value={s}>

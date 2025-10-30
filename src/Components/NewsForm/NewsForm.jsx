@@ -76,13 +76,12 @@ const NewsForm = ({ role }) => {
         ))}
       </select>
       <select
-        value={noticia.status || noticia.estado || "Edición"}
+        value={noticia.estado || "Edición"}
         onChange={(e) => {
           const val = e.target.value;
           setNoticia({
             ...noticia,
             estado: val,
-            status: val,
           });
         }}
       >
@@ -97,7 +96,7 @@ const NewsForm = ({ role }) => {
           try {
             const colRef = collection(db, "Noticias");
             const nowHuman = new Date().toLocaleDateString("es-CO");
-            const chosen = noticia.status ?? noticia.estado ?? "Edición";
+            const chosen = noticia.estado ?? "Edición";
             const finalStatus = allowedStatuses.includes(chosen)
               ? chosen
               : "Edición";

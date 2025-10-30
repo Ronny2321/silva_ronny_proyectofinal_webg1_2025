@@ -45,7 +45,7 @@ const CreateNews = ({ role }) => {
       setSaving(true);
       const colRef = collection(db, "Noticias");
       const nowHuman = new Date().toLocaleDateString("es-CO");
-      const chosen = noticia.status ?? noticia.estado ?? "Edición";
+      const chosen = noticia.estado ?? "Edición";
       const finalStatus = allowedStatuses.includes(chosen) ? chosen : "Edición";
       await addDoc(colRef, {
         ...noticia,

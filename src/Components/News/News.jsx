@@ -82,7 +82,7 @@ const News = ({ role }) => {
             <div style={{ marginTop: 6 }}>
               {role === "Editor" ? (
                 (() => {
-                  const currentStatus = (n.estado || n.status) ?? "Edición";
+                  const currentStatus = (n.estado) ?? "Edición";
                   const allowed = editorTransitions(currentStatus);
                   const disabled = allowed.length <= 1;
                   return (
@@ -97,13 +97,12 @@ const News = ({ role }) => {
                           setSavingId(n.id);
                           await updateDoc(doc(db, "Noticias", n.id), {
                             estado: val,
-                            status: val,
-                            updatedAt: serverTimestamp(),
+                            fechaActualizacion: serverTimestamp(),
                           });
                           setNews((list) =>
                             list.map((it) =>
                               it.id === n.id
-                                ? { ...it, estado: val, status: val }
+                                ? { ...it, estado: val }
                                 : it
                             )
                           );
@@ -116,7 +115,7 @@ const News = ({ role }) => {
                     />
                   );
                 })()
-              ) : (n.estado || n.status) !== "Publicado" ? (
+              ) : (n.estado) !== "Publicado" ? (
                 <button
                   onClick={() => {
                     setEditingId(n.id);
