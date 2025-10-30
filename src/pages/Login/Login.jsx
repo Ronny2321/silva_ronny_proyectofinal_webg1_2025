@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import "./Login.css";
 
 const translate = (code) => {
   const map = {
@@ -50,31 +51,106 @@ const Login = () => {
   };
 
   return (
-    <div style={{ maxWidth: 320, margin: "40px auto" }}>
-      <h2>Iniciar sesión</h2>
-      <form onSubmit={onSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
-      {err && <p style={{ color: "red" }}>{err}</p>}
-      <p>
-        ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
-      </p>
+    <div className="login-screen">
+      <div className="bg-texture" aria-hidden />
+      <section className="login-card appear">
+        <div className="card-header">
+          <div className="logo">UA</div>
+          <h1>Bienvenido</h1>
+          <p className="sub">Accede a tu cuenta para gestionar tus noticias.</p>
+        </div>
+
+        <form className="form" onSubmit={onSubmit} noValidate>
+          <label className="field">
+            <span className="icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M4 8l8 5 8-5" />
+                <rect x="4" y="4" width="16" height="16" rx="2" />
+              </svg>
+            </span>
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+            />
+          </label>
+
+          <label className="field">
+            <span className="icon">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </span>
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </label>
+
+          {err && (
+            <div className="error" role="alert">
+              {err}
+            </div>
+          )}
+
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? (
+              <span className="btn-content">
+                <svg
+                  className="spin"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <circle cx="12" cy="12" r="10" opacity="0.25" />
+                  <path d="M22 12a10 10 0 0 1-10 10" />
+                </svg>
+                Entrando…
+              </span>
+            ) : (
+              <span className="btn-content">Entrar</span>
+            )}
+          </button>
+        </form>
+
+        <p className="hint">
+          ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+        </p>
+      </section>
     </div>
   );
 };
