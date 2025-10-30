@@ -1,0 +1,166 @@
+@import "../Login/Login.css";
+
+.create-page {
+    padding: 16px;
+}
+
+.create-title {
+    margin: 0 0 8px;
+    font-weight: 800;
+    color: #0f172a;
+    font-family: Merriweather, Georgia, serif;
+}
+
+.create-sub {
+    margin: 0 0 16px;
+    color: #475569;
+}
+
+.create-grid {
+    display: grid;
+    gap: 16px;
+    align-items: start;
+}
+
+@media (min-width: 1024px) {
+    .create-grid {
+        grid-template-columns: 1fr 360px;
+    }
+}
+
+.panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .15);
+    padding: 20px;
+}
+
+.panel.preview {
+    padding: 0;
+    overflow: hidden;
+}
+
+.group {
+    margin-bottom: 12px;
+}
+
+.label {
+    display: block;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 6px;
+}
+
+.input {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 0 12px;
+    outline: none;
+    font-size: 1rem;
+    transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, .15);
+}
+
+.textarea {
+    width: 100%;
+    min-height: 220px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 12px;
+    outline: none;
+    font-size: 1rem;
+    resize: vertical;
+    transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.select {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 0 12px;
+    background: #fff;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #0f172a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.chip:hover {
+    background: #f8fafc;
+}
+
+.chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.content-box {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff 20%, #fff 100%);
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn-lg {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    font-weight: 800;
+}
+
+.preview-image {
+    width: 100%;
+    height: 200px;
+    background: #e2e8f0;
+    display: block;
+    object-fit: cover;
+}
+
+.preview-body {
+    padding: 16px;
+}
+
+.preview-title {
+    margin: 0 0 6px;
+    font-weight: 900;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-family: Merriweather, Georgia, serif;
+}
+
+.preview-sub {
+    margin: 0;
+    color: #475569;
+}
