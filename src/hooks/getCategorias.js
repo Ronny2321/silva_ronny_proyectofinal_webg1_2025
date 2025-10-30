@@ -32,7 +32,6 @@ export function useCategoriesDocs() {
               };
             });
             buffers.set(colName, arr);
-            // merge y ordenar
             const merged = Array.from(buffers.values()).flat();
             merged.sort((a, b) => a.Nombre.localeCompare(b.Nombre, "es"));
             setDocs(merged);
@@ -61,7 +60,6 @@ export function useCategoriesDocs() {
   return { docs, loading, error };
 }
 
-// Hook de conveniencia: devuelve solo los nombres (strings)
 export default function useCategoriesCollection(defaults = ["General"]) {
   const { docs, loading, error } = useCategoriesDocs();
   const categories = useMemo(() => {

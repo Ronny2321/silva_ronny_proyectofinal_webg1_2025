@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Modal from "../Modal/Modal.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import useCategoriesCollection from "../../hooks/getCategorias.js";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const editorTransitions = useMemo(
@@ -15,22 +16,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
     },
     []
   );
-  const CATEGORIES = useMemo(
-    () => [
-      "General",
-      "Tecnología",
-      "Política",
-      "Deportes",
-      "Economía",
-      "Salud",
-      "Cultura",
-      "Entretenimiento",
-      "Ciencia",
-      "Internacional",
-      "Nacional",
-    ],
-    []
-  );
+  const { categories: CATEGORIES } = useCategoriesCollection(["General"]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -55,11 +41,11 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
           setError("La noticia no existe");
           return;
         }
-  const data = snap.data();
-  setForm((f) => ({ ...f, ...data }));
-  const currentStatus = data.status || data.estado || "Edición";
-  setStatus(currentStatus);
-  const pub = currentStatus === "Publicado";
+        const data = snap.data();
+        setForm((f) => ({ ...f, ...data }));
+        const currentStatus = data.status || data.estado || "Edición";
+        setStatus(currentStatus);
+        const pub = currentStatus === "Publicado";
         setPublished(pub);
       } catch (e) {
         console.error(e);
