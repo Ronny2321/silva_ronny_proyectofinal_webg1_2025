@@ -10,6 +10,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
 import Categorias from "./pages/Categorias.jsx";
+import NewsDetail from "./pages/NewsDetail.jsx";
 
 function App() {
   const [usuario, setUsuario] = React.useState(null);
@@ -49,6 +50,7 @@ function App() {
           element={usuario ? <Navigate to="/" replace /> : <Login />}
         />
         <Route path="/home" element={<Home />} />
+        <Route path="/noticia/:id" element={<NewsDetail />} />
         <Route
           path="/register"
           element={usuario ? <Navigate to="/" replace /> : <Register />}

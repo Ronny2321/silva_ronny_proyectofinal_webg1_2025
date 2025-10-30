@@ -4,6 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import { Link } from "react-router-dom";
 
 const NewsCard = ({ news }) => {
   const fmtDate = (val) => {
@@ -28,7 +29,7 @@ const NewsCard = ({ news }) => {
   };
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
+      <CardActionArea component={Link} to={`/noticia/${news.id}`}>
         <CardMedia
           component="img"
           height="140"
