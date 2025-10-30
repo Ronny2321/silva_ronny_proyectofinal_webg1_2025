@@ -83,7 +83,7 @@ function App() {
           path="/categorias"
           element={
             usuario ? (
-              role === "Editor" ? (
+              role === "Reportero" ? (
                 <Categorias />
               ) : (
                 <Navigate to="/" replace />

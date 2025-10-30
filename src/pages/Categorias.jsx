@@ -1,44 +1,19 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import db from "../FirebaseConfig/FirebaseConfig.js";
 import {
   collection,
   addDoc,
-  onSnapshot,
-  query,
-  orderBy,
   doc,
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+import { useCategoriesDocs } from "../hooks/getCategorias.js";
 
 export default function Categorias() {
-  const [items, setItems] = useState([]);
+  const { docs, loading } = useCategoriesDocs(); 
   const [newName, setNewName] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const q = query(collection(db, "categorias"), orderBy("Nombre"));
-    const unsub = onSnapshot(
-      q,
-      (snap) => {
-        const list = snap.docs.map((d) => {
-          const data = d.data();
-          const nombre =
-            data?.Nombre || data?.nombre || data?.name || data?.title || "";
-          return { id: d.id, Nombre: String(nombre).trim() };
-        });
-        setItems(list);
-        setLoading(false);
-      },
-      (err) => {
-        console.error("Error leyendo categorias:", err);
-        setLoading(false);
-      }
-    );
-    return () => unsub();
-  }, []);
 
   const canAdd = useMemo(() => newName.trim().length > 0, [newName]);
   const canSaveEdit = useMemo(
@@ -50,7 +25,7 @@ export default function Categorias() {
     const name = newName.trim();
     if (!name) return;
     try {
-      await addDoc(collection(db, "categorias"), { Nombre: name });
+      await addDoc(collection(db, "categoria"), { Nombre: name });
       setNewName("");
     } catch (e) {
       console.error("No se pudo agregar la categoría", e);
@@ -71,7 +46,9 @@ export default function Categorias() {
   const saveEdit = async () => {
     if (!canSaveEdit) return;
     try {
-      await updateDoc(doc(db, "categorias", editingId), {
+      const current = docs.find((d) => d.id === editingId);
+      if (!current) return;
+      await updateDoc(doc(db, current.collection, editingId), {
         Nombre: editingName.trim(),
       });
       cancelEdit();
@@ -84,7 +61,9 @@ export default function Categorias() {
   const removeItem = async (id) => {
     if (!window.confirm("¿Eliminar esta categoría?")) return;
     try {
-      await deleteDoc(doc(db, "categorias", id));
+      const current = docs.find((d) => d.id === id);
+      if (!current) return;
+      await deleteDoc(doc(db, current.collection, id));
     } catch (e) {
       console.error("No se pudo eliminar la categoría", e);
       alert("Error eliminando la categoría");
@@ -115,11 +94,11 @@ export default function Categorias() {
 
       {loading ? (
         <p>Cargando...</p>
-      ) : items.length === 0 ? (
+      ) : docs.length === 0 ? (
         <p>No hay categorías</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0, maxWidth: 480 }}>
-          {items.map((it) => (
+          {docs.map((it) => (
             <li
               key={it.id}
               style={{

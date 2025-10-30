@@ -11,10 +11,11 @@ const Nav = ({ user, role }) => {
       {user ? (
         <>
           <Link to="/">Noticias</Link>
-          {role === "Editor" ? (
-            <Link to="/categorias">Categorías</Link>
-          ) : (
-            <Link to="/crear">Crear</Link>
+          {role === "Reportero" && (
+            <>
+              <Link to="/crear">Crear</Link>
+              <Link to="/categorias">Categorías</Link>
+            </>
           )}
           <button className="logout" onClick={() => signOut(auth)}>
             Cerrar sesión
