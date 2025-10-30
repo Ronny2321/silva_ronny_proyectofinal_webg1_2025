@@ -1,10 +1,6 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
 import { Link } from "react-router-dom";
+import "./NewsCard.css";
 
 const NewsCard = ({ news }) => {
   const fmtDate = (val) => {
@@ -27,82 +23,34 @@ const NewsCard = ({ news }) => {
     if (val instanceof Date) return val.toLocaleDateString("es-CO");
     return String(val);
   };
+
+  const imgSrc = news.img || news.imagen;
+  const dateStr = fmtDate(news.fechaPublicacion || news.fecha || news.fechaCreacion || news.createdAt);
+
   return (
-    <Card sx={{ maxWidth: 360, boxShadow: 3, borderRadius: 3 }}>
-      <CardActionArea component={Link} to={`/noticia/${news.id}`}>
-        <CardMedia
-          component="img"
-          image={news.img || news.imagen}
-          alt={news.titulo || "Imagen de noticia"}
-          sx={{ height: 200, objectFit: "cover" }}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 800 }}>
-            {news.titulo}
-          </Typography>
-          {news.subtitulo && (
-            <Typography
-              variant="subtitle2"
-              component="h3"
-              sx={{ color: "text.secondary" }}
-            >
-              {news.subtitulo}
-            </Typography>
-          )}
-          <Typography
-            variant="body2"
-            component="div"
-            sx={{ color: "text.secondary" }}
-          >
-            Fecha creación:{" "}
-            {fmtDate(news.createdAt || news.fechaCreacion || news.fecha)}
-          </Typography>
-          {news.fechaActualizacion && (
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{ color: "text.secondary" }}
-            >
-              Fecha actualización: {fmtDate(news.fechaActualizacion)}
-            </Typography>
-          )}
-          {news.contenido && (
-            <Typography variant="body2" component="div" sx={{ color: "text.secondary" }}>
-              {String(news.contenido).length > 140
-                ? String(news.contenido).slice(0, 140) + "…"
-                : String(news.contenido)}
-            </Typography>
-          )}
-          {news.categoria && (
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{ color: "text.secondary" }}
-            >
-              Categoría: {news.categoria}
-            </Typography>
-          )}
-          {news.autor && (
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{ color: "text.secondary" }}
-            >
-              Autor: {news.autor}
-            </Typography>
-          )}
-          {news.estado && (
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{ color: "text.secondary" }}
-            >
-              Estado: {news.estado}
-            </Typography>
-          )}
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Link to={`/noticia/${news.id}`} className="news-card" aria-label={news.titulo || "Noticia"}>
+      <div className="card-figure">
+        {imgSrc ? (
+          <img
+            className="card-img"
+            src={imgSrc}
+            alt={news.titulo || "Imagen de noticia"}
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
+          />
+        ) : (
+          <div className="card-img placeholder" aria-hidden />
+        )}
+        {news.categoria && <span className="badge">{news.categoria}</span>}
+      </div>
+      <div className="card-content">
+        <h3 className="title">{news.titulo || "Sin título"}</h3>
+        {news.subtitulo && <p className="subtitle">{news.subtitulo}</p>}
+        <div className="meta">
+          {dateStr && <span>{dateStr}</span>}
+          {news.autor && <span>• {news.autor}</span>}
+        </div>
+      </div>
+    </Link>
   );
 };
 
