@@ -28,21 +28,21 @@ const NewsCard = ({ news }) => {
     return String(val);
   };
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 360, boxShadow: 3, borderRadius: 3 }}>
       <CardActionArea component={Link} to={`/noticia/${news.id}`}>
         <CardMedia
           component="img"
-          height="140"
           image={news.img || news.imagen}
-          alt="green iguana"
+          alt={news.titulo || "Imagen de noticia"}
+          sx={{ height: 200, objectFit: "cover" }}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 800 }}>
             {news.titulo}
           </Typography>
           {news.subtitulo && (
             <Typography
-              variant="subtitle1"
+              variant="subtitle2"
               component="h3"
               sx={{ color: "text.secondary" }}
             >
@@ -67,12 +67,10 @@ const NewsCard = ({ news }) => {
             </Typography>
           )}
           {news.contenido && (
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{ color: "text.secondary" }}
-            >
-              Contenido: {news.contenido}
+            <Typography variant="body2" component="div" sx={{ color: "text.secondary" }}>
+              {String(news.contenido).length > 140
+                ? String(news.contenido).slice(0, 140) + "…"
+                : String(news.contenido)}
             </Typography>
           )}
           {news.categoria && (

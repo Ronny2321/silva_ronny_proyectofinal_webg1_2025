@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import db from "../FirebaseConfig/FirebaseConfig.js";
+import db from "../../FirebaseConfig/FirebaseConfig.js";
 import {
   collection,
   addDoc,
@@ -7,7 +7,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { useCategoriesDocs } from "../hooks/getCategorias.js";
+import { useCategoriesDocs } from "../../hooks/getCategorias.js";
 
 export default function Categorias() {
   const { docs, loading } = useCategoriesDocs(); 

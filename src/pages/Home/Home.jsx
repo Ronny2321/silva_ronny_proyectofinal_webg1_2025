@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import db from "../FirebaseConfig/FirebaseConfig";
+import db from "../../FirebaseConfig/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import NewsCard from "../Components/NewsCard/NewsCard";
+import NewsCard from "../../Components/NewsCard/NewsCard";
 
 const Home = () => {
   const [items, setItems] = useState([]);

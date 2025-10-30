@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import db, { auth } from "../FirebaseConfig/FirebaseConfig.js";
+import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
-import useCategoriesCollection from "../hooks/getCategorias.js";
+import useCategoriesCollection from "../../hooks/getCategorias.js";
 
 const CreateNews = ({ role }) => {
   const [noticia, setNoticia] = useState({});

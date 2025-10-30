@@ -1,16 +1,22 @@
 import "./App.css";
 import React from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import theme from "./theme";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header/Header.jsx";
-import News from "./pages/News.jsx";
-import CreateNews from "./pages/CreateNews.jsx";
+import Footer from "./Components/Footer/Footer.jsx";
 import db, { auth } from "./FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
-import Categorias from "./pages/Categorias.jsx";
-import NewsDetail from "./pages/NewsDetail.jsx";
+import News from "./pages/News/News.jsx";
+import CreateNews from "./pages/CreateNews/CreateNews.jsx";
+import Login from "./pages/Login/Login.jsx";
+import Register from "./pages/Register/Register.jsx";
+import Home from "./pages/Home/Home.jsx";
+import Categorias from "./pages/Categorias/Categorias.jsx";
+import NewsDetail from "./pages/NewsDetail/NewsDetail.jsx";
 
 function App() {
   const [usuario, setUsuario] = React.useState(null);
@@ -41,9 +47,13 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Header user={usuario} role={role} />
-      <Routes>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Header user={usuario} role={role} />
+        <Box component="main" sx={{ minHeight: 'calc(100vh - 160px)', py: 3 }}>
+          <Container maxWidth="lg">
+            <Routes>
         <Route path="/inicio" element={<Home />} />
         <Route
           path="/login"
@@ -95,12 +105,16 @@ function App() {
             )
           }
         />
-        <Route
-          path="*"
-          element={<Navigate to={usuario ? "/" : "/home"} replace />}
-        />
-      </Routes>
-    </BrowserRouter>
+              <Route
+                path="*"
+                element={<Navigate to={usuario ? "/" : "/home"} replace />}
+              />
+            </Routes>
+          </Container>
+        </Box>
+        <Footer />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

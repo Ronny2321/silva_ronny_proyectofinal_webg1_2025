@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import db from "../FirebaseConfig/FirebaseConfig";
+import db from "../../FirebaseConfig/FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 export default function NewsDetail() {
   const { id } = useParams();
@@ -39,8 +42,8 @@ export default function NewsDetail() {
     };
   }, [id]);
 
-  if (loading) return <p style={{ padding: 16 }}>Cargando…</p>;
-  if (error) return <p style={{ padding: 16 }}>{error}</p>;
+  if (loading) return <Container sx={{ py: 4 }}><Typography>Cargando…</Typography></Container>;
+  if (error) return <Container sx={{ py: 4 }}><Typography>{error}</Typography></Container>;
   if (!item) return null;
 
   const fecha = item.fechaPublicacion || item.fecha || item.fechaCreacion;
@@ -56,45 +59,28 @@ export default function NewsDetail() {
   })();
 
   return (
-    <article
-      style={{
-        padding: 16,
-        display: "grid",
-        gap: 12,
-        maxWidth: 920,
-        margin: "0 auto",
-      }}
-    >
-      <Link to="/home" style={{ textDecoration: "none" }}>
-        ← Volver
-      </Link>
-      <h1 style={{ margin: 0 }}>{item.titulo}</h1>
+    <Container sx={{ py: 4, maxWidth: 920 }}>
+      <Button component={Link} to="/home" variant="text">← Volver</Button>
+      <Typography variant="h3" sx={{ fontWeight: 800, mb: 1 }}>{item.titulo}</Typography>
       {item.subtitulo && (
-        <h3 style={{ color: "#666", marginTop: 0 }}>{item.subtitulo}</h3>
+        <Typography variant="h6" sx={{ color: 'text.secondary', mt: -1, mb: 1 }}>{item.subtitulo}</Typography>
       )}
       {fechaStr && (
-        <span style={{ color: "#888", fontSize: 14 }}>
-          Publicado: {fechaStr}
-        </span>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>Publicado: {fechaStr}</Typography>
       )}
       {item.imagen && (
         <img
           src={item.imagen}
           alt={item.titulo}
-          style={{
-            width: "100%",
-            maxHeight: 520,
-            objectFit: "cover",
-            borderRadius: 8,
-          }}
+          style={{ width: '100%', maxHeight: 520, objectFit: 'cover', borderRadius: 12 }}
         />
       )}
       {item.categoria && (
-        <strong style={{ marginTop: 8 }}>Sección: {item.categoria}</strong>
+        <Typography variant="subtitle2" sx={{ mt: 2, fontWeight: 700 }}>Sección: {item.categoria}</Typography>
       )}
-      <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.7, fontSize: 18 }}>
+      <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.9, fontSize: 18, mt: 1 }}>
         {item.contenido}
-      </div>
-    </article>
+      </Typography>
+    </Container>
   );
 }

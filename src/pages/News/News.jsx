@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import "./News.css";
-import NewsCard from "../Components/NewsCard/NewsCard.jsx";
-import db, { auth } from "../FirebaseConfig/FirebaseConfig.js";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
+import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import {
   collection,
   getDocs,
@@ -13,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Link } from "react-router-dom";
-import EditNewsModal from "./EditNewsModal.jsx";
+import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
 
 const News = ({ role }) => {
   const [news, setNews] = useState([]);
@@ -61,19 +63,13 @@ const News = ({ role }) => {
     loadNews(uid, role);
   }, [uid, role]);
   return (
-    <main>
+    <Container sx={{ py: 2 }}>
       {role !== "Editor" && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: 12,
-          }}
-        >
-          <Link to="/crear">
-            <button>Crear noticia</button>
-          </Link>
-        </div>
+        <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
+          <Button variant="contained" color="secondary" component={Link} to="/crear">
+            Crear noticia
+          </Button>
+        </Stack>
       )}
       {news.length > 0 ? (
         news.map((n) => (
@@ -139,7 +135,7 @@ const News = ({ role }) => {
           if (saved && uid) await loadNews(uid, role);
         }}
       />
-    </main>
+    </Container>
   );
 };
 

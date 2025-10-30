@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../FirebaseConfig/FirebaseConfig";
+import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 const translate = (code) => {

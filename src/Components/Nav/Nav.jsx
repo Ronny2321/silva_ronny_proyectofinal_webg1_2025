@@ -1,33 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signOut } from "firebase/auth";
-import "./Nav.css";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const Nav = ({ user, role }) => {
   return (
-    <nav className="app-nav">
-      <Link to="/home">Inicio</Link>
+    <Stack direction="row" spacing={1} alignItems="center">
+      <Button color="inherit" component={RouterLink} to="/home">Inicio</Button>
       {user ? (
         <>
-          <Link to="/">Noticias</Link>
+          <Button color="inherit" component={RouterLink} to="/">Noticias</Button>
           {role === "Reportero" && (
             <>
-              <Link to="/crear">Crear</Link>
-              <Link to="/categorias">Categorías</Link>
+              <Button color="inherit" component={RouterLink} to="/crear">Crear</Button>
+              <Button color="inherit" component={RouterLink} to="/categorias">Categorías</Button>
             </>
           )}
-          <button className="logout" onClick={() => signOut(auth)}>
+          <Button variant="outlined" color="inherit" onClick={() => signOut(auth)}>
             Cerrar sesión
-          </button>
+          </Button>
         </>
       ) : (
         <>
-          <Link to="/login">Iniciar sesión</Link>
-          <Link to="/register">Crear cuenta</Link>
+          <Button color="inherit" component={RouterLink} to="/login">Iniciar sesión</Button>
+          <Button color="inherit" component={RouterLink} to="/register">Crear cuenta</Button>
         </>
       )}
-    </nav>
+    </Stack>
   );
 };
 

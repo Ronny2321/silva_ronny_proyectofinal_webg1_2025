@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Modal from "../Components/Modal/Modal.jsx";
-import db from "../FirebaseConfig/FirebaseConfig.js";
+import Modal from "../../Components/Modal/Modal.jsx";
+import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import useCategoriesCollection from "../hooks/getCategorias.js";
+import useCategoriesCollection from "../../hooks/getCategorias.js";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const editorTransitions = useMemo(
