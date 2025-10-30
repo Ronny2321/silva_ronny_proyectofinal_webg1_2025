@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import db from "../../FirebaseConfig/FirebaseConfig.js";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
 
 const NewsForm = () => {
   const [noticia, setNoticia] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    console.log(noticia);
-  }, [noticia]);
+    const unsub = onAuthStateChanged(auth, (u) => setCurrentUser(u));
+    return () => unsub();
+  }, []);
 
   return (
     <div>
@@ -42,11 +45,6 @@ const NewsForm = () => {
           })
         }
       />
-      <input
-        type="text"
-        placeholder="Autor"
-        onChange={(e) => setNoticia({ ...noticia, autor: e.target.value })}
-      />
       <select
         defaultValue="Edición"
         onChange={(e) =>
@@ -71,11 +69,11 @@ const NewsForm = () => {
               ...noticia,
               contenido: noticia.contenido ?? noticia.noticia,
               section: noticia.section ?? noticia.categoria,
-              status: noticia.status ?? noticia.estado ?? "Edición",
+              estado: noticia.estado ?? "Edición",
+              autor: currentUser?.email || "",
+              authorId: currentUser?.uid || "",
               fechaCreacion: nowHuman,
               fechaActualizacion: nowHuman,
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp(),
             });
             alert("Noticia guardada");
           } catch (e) {
