@@ -9,7 +9,6 @@ const NewsCard = ({ news }) => {
   const fmtDate = (val) => {
     if (!val) return "";
     if (typeof val === "string") return val;
-    // Firestore Timestamp
     if (val?.toDate instanceof Function) {
       try {
         return val.toDate().toLocaleDateString("es-CO");
@@ -63,8 +62,7 @@ const NewsCard = ({ news }) => {
               component="div"
               sx={{ color: "text.secondary" }}
             >
-              Fecha actualización:{" "}
-              {fmtDate(news.fechaActualizacion)}
+              Fecha actualización: {fmtDate(news.fechaActualizacion)}
             </Typography>
           )}
           {news.contenido && (

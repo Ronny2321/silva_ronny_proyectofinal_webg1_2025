@@ -9,6 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
+import Categorias from "./pages/Categorias.jsx";
 
 function App() {
   const [usuario, setUsuario] = React.useState(null);
@@ -72,6 +73,20 @@ function App() {
                 <Navigate to="/" replace />
               ) : (
                 <CreateNews role={role} />
+              )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/categorias"
+          element={
+            usuario ? (
+              role === "Editor" ? (
+                <Categorias />
+              ) : (
+                <Navigate to="/" replace />
               )
             ) : (
               <Navigate to="/login" replace />

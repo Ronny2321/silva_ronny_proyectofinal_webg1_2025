@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import db, { auth } from "../FirebaseConfig/FirebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
+import useCategoriesCollection from "../hooks/getCategorias.js";
 
 const CreateNews = ({ role }) => {
   const [noticia, setNoticia] = useState({});
@@ -18,22 +19,7 @@ const CreateNews = ({ role }) => {
     [role]
   );
 
-  const CATEGORIES = useMemo(
-    () => [
-      "General",
-      "Tecnología",
-      "Política",
-      "Deportes",
-      "Economía",
-      "Salud",
-      "Cultura",
-      "Entretenimiento",
-      "Ciencia",
-      "Internacional",
-      "Nacional",
-    ],
-    []
-  );
+  const { categories: CATEGORIES } = useCategoriesCollection(["Otro"]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setCurrentUser(u));
@@ -95,11 +81,14 @@ const CreateNews = ({ role }) => {
           rows={6}
         />
         <select
-          value={noticia.categoria || "General"}
+          value={
+            noticia.categoria || noticia.section || CATEGORIES[0] || "General"
+          }
           onChange={(e) =>
             setNoticia({
               ...noticia,
               categoria: e.target.value,
+              section: e.target.value,
             })
           }
         >

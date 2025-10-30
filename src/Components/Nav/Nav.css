@@ -1,0 +1,29 @@
+.app-nav{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.app-nav a{
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.app-nav a:hover{
+  background: rgba(255,255,255,0.1);
+}
+
+.app-nav .logout{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.app-nav .logout:hover{
+  background: rgba(255,255,255,0.1);
+}
