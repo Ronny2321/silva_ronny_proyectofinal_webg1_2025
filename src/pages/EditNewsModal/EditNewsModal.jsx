@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Modal from "../../Components/Modal/Modal.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
+import "./EditNewsModal.css";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const editorTransitions = useMemo(
@@ -28,6 +29,9 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
   });
   const [published, setPublished] = useState(false);
   const [estado, setStatus] = useState("Edición");
+  const [toastOk, setToastOk] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const timers = useRef([]);
 
   useEffect(() => {
     const load = async () => {
@@ -73,7 +77,9 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         estado: estado,
         fechaActualizacion: serverTimestamp(),
       });
-      onClose?.(true);
+      setToastOk(true);
+      timers.current.push(setTimeout(() => setClosing(true), 650));
+      timers.current.push(setTimeout(() => onClose?.(true), 650 + 220));
     } catch (e) {
       console.error(e);
       setError("Error guardando cambios");
@@ -82,28 +88,68 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      timers.current.forEach((t) => clearTimeout(t));
+      timers.current = [];
+      setToastOk(false);
+      setClosing(false);
+    };
+  }, [open]);
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Editar noticia"
       maxWidth="md"
+      rootClassName={closing ? "closing" : ""}
       actions={
         <>
-          <button onClick={() => onClose?.(false)} disabled={loading}>
+          <button
+            className="btn btn-outline"
+            onClick={() => onClose?.(false)}
+            disabled={loading}
+          >
             Cancelar
           </button>
-          <button onClick={handleSave} disabled={loading}>
+          <button
+            className="btn btn-primary"
+            onClick={handleSave}
+            disabled={loading}
+          >
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </>
       }
     >
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
-      <div style={{ display: "grid", gap: 12 }}>
-        <label style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
-          Estado:
+      <div className="em-header">
+        <h3 className="modal-title">Editar noticia</h3>
+        <span
+          className={
+            "em-badge " +
+            (estado === "Publicado"
+              ? "ok"
+              : estado === "Terminado"
+              ? "info"
+              : estado === "Desactivado"
+              ? "off"
+              : "warn")
+          }
+        >
+          {estado}
+        </span>
+      </div>
+
+      {error && <p className="em-error">{error}</p>}
+
+      <div className="em-grid">
+        <div className="group">
+          <label className="label" htmlFor="estado">
+            Estado
+          </label>
           <select
+            id="estado"
+            className="select"
             value={estado}
             onChange={(e) => setStatus(e.target.value)}
             disabled={
@@ -120,48 +166,113 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
               </option>
             ))}
           </select>
-        </label>
-        <input
-          value={form.titulo}
-          onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-          placeholder="Título"
-          disabled={role === "Reportero" && published}
-        />
-        <input
-          value={form.subtitulo}
-          onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
-          placeholder="Subtítulo"
-          disabled={role === "Reportero" && published}
-        />
-        <textarea
-          value={form.contenido}
-          onChange={(e) => setForm({ ...form, contenido: e.target.value })}
-          placeholder="Contenido"
-          rows={6}
-          disabled={role === "Reportero" && published}
-        />
-        <select
-          value={form.categoria || "General"}
-          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-          disabled={role === "Reportero" && published}
-        >
-          {CATEGORIES.map((name) => (
-            <option key={name} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-        <input
-          type="url"
-          value={form.imagen}
-          onChange={(e) => setForm({ ...form, imagen: e.target.value })}
-          placeholder="URL de la imagen (https://...)"
-          disabled={role === "Reportero" && published}
-        />
-        {form.imagen && (
-          <img src={form.imagen} alt="prev" style={{ width: 160 }} />
-        )}
+        </div>
+
+        <div className="group">
+          <label className="label" htmlFor="titulo">
+            Título
+          </label>
+          <input
+            id="titulo"
+            className="input"
+            value={form.titulo}
+            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+            placeholder="Título"
+            disabled={role === "Reportero" && published}
+          />
+        </div>
+
+        <div className="group">
+          <label className="label" htmlFor="subtitulo">
+            Subtítulo
+          </label>
+          <input
+            id="subtitulo"
+            className="input"
+            value={form.subtitulo}
+            onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
+            placeholder="Subtítulo"
+            disabled={role === "Reportero" && published}
+          />
+        </div>
+
+        <div className="group">
+          <label className="label" htmlFor="contenido">
+            Contenido
+          </label>
+          <textarea
+            id="contenido"
+            className="textarea"
+            value={form.contenido}
+            onChange={(e) => setForm({ ...form, contenido: e.target.value })}
+            placeholder="Contenido"
+            rows={6}
+            disabled={role === "Reportero" && published}
+          />
+        </div>
+
+        <div className="group">
+          <label className="label" htmlFor="categoria">
+            Categoría
+          </label>
+          <select
+            id="categoria"
+            className="select"
+            value={form.categoria || "General"}
+            onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+            disabled={role === "Reportero" && published}
+          >
+            {CATEGORIES.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="group">
+          <label className="label" htmlFor="imagen">
+            Imagen (URL)
+          </label>
+          <input
+            id="imagen"
+            type="url"
+            className="input"
+            value={form.imagen}
+            onChange={(e) => setForm({ ...form, imagen: e.target.value })}
+            placeholder="https://..."
+            disabled={role === "Reportero" && published}
+          />
+          {form.imagen && (
+            <img
+              className="em-preview"
+              src={form.imagen}
+              alt="Vista previa"
+              onError={(e) => (e.currentTarget.style.display = "none")}
+            />
+          )}
+        </div>
       </div>
+
+      {toastOk && (
+        <div className="em-toast" role="status" aria-live="polite">
+          <div className="em-toast-icon" aria-hidden>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </div>
+          Cambios guardados
+        </div>
+      )}
     </Modal>
   );
 };

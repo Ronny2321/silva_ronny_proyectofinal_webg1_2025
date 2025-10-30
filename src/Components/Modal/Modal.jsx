@@ -22,6 +22,7 @@ const Modal = ({
   secondaryText,
   onSecondary,
   closeOnOverlay = true,
+  rootClassName = "",
 }) => {
   React.useEffect(() => {
     const onKey = (e) => {
@@ -36,7 +37,11 @@ const Modal = ({
   const width = SIZE_MAP[maxWidth] || SIZE_MAP.md;
 
   return ReactDOM.createPortal(
-    <div className="modal-root" role="dialog" aria-modal="true">
+    <div
+      className={"modal-root" + (rootClassName ? " " + rootClassName : "")}
+      role="dialog"
+      aria-modal="true"
+    >
       <div
         className="modal-overlay"
         onClick={() => {
