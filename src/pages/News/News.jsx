@@ -171,7 +171,7 @@ const News = ({ role }) => {
               setPage(1);
             }}
           >
-            {["Todos", "Edición", "Terminado", "Publicado", "Desactivado"].map(
+            {["Estado", "Edición", "Terminado", "Publicado", "Desactivado"].map(
               (s) => (
                 <option key={s} value={s}>
                   {s}
@@ -187,7 +187,7 @@ const News = ({ role }) => {
               setPage(1);
             }}
           >
-            {["Todas", ...CATEGORIES.filter((c) => c && c !== "Todas")].map(
+            {["Categoria", ...CATEGORIES.filter((c) => c && c !== "Todas")].map(
               (c) => (
                 <option key={c} value={c}>
                   {c}
