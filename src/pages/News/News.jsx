@@ -183,7 +183,7 @@ const News = ({ role }) => {
             }}
           />
         </div>
-        <div className="filters">
+  <div className="filters" role="group" aria-label="Filtros de noticias">
           <select
             className="select"
             value={statusFilter}

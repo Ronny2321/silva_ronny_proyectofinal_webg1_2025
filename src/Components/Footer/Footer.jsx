@@ -1,5 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
@@ -10,7 +8,7 @@ const Footer = () => {
       className="site-footer bg-slate-900 text-slate-300 dark:bg-black dark:text-slate-400"
       role="contentinfo"
     >
-      <div className="footer-inner container mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
+      <div className="footer-inner container mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center place-items-center">
         <div className="col about">
           <h4 className="ft-title font-bold text-lg mb-3">Sobre Noticias UA</h4>
           <p className="ft-about text-slate-400">
@@ -42,7 +40,7 @@ const Footer = () => {
 
         <div className="col social">
           <h4 className="ft-title font-bold text-lg mb-3">Redes</h4>
-          <div className="ft-social inline-flex gap-3 justify-center sm:justify-start">
+          <div className="ft-social inline-flex gap-3 justify-center">
             <a
               className="social-btn rounded-full hover:bg-[#1E3A8A] hover:text-white transition-all duration-200 ease-in-out hover:scale-105"
               href="https://twitter.com/"

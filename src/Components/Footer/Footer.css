@@ -11,12 +11,15 @@
     padding: 24px 16px;
     display: grid;
     gap: 16px;
+    justify-items: center;
+    text-align: center;
 }
 
 @media (min-width: 768px) {
     .footer-inner {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         align-items: start;
+        justify-items: center;
     }
 }
 
@@ -33,6 +36,7 @@
     margin: 0;
     display: grid;
     gap: 8px;
+    justify-items: center;
 }
 
 .ft-links a {

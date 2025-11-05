@@ -87,6 +87,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .pills {
@@ -209,7 +211,7 @@
 
 .section-title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: clamp(1.125rem, 2.5vw + 0.5rem, 1.5rem);
   font-weight: 900;
   color: #0f172a;
 }
@@ -251,7 +253,7 @@
   min-width: 100%;
   text-decoration: none;
   color: inherit;
-  aspect-ratio: 21 / 9;
+  aspect-ratio: 16 / 9;
   background: #000;
 }
 
@@ -284,4 +286,10 @@
 
 .dot.active {
   background: #fff;
+}
+
+@media (min-width: 768px) {
+  .slide {
+    aspect-ratio: 21 / 9;
+  }
 }
