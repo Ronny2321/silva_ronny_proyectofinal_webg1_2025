@@ -203,6 +203,8 @@
 .home-section {
   display: grid;
   gap: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 .section-title {
@@ -214,8 +216,20 @@
 
 .home-grid-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .home-grid-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-grid-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .carousel {
@@ -223,6 +237,7 @@
   overflow: hidden;
   border-radius: 16px;
   background: #000;
+  z-index: 0;
 }
 
 .slides {
