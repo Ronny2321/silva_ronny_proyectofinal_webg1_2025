@@ -86,3 +86,36 @@
     gap: 6px;
     align-items: center;
 }
+
+.status-badge {
+    margin-left: auto;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border: 1px solid transparent;
+}
+
+.status-editing {
+    background: #f1f5f9;
+    color: #64748B;
+    border-color: #e2e8f0;
+}
+
+.status-done {
+    background: #eff6ff;
+    color: #2563EB;
+    border-color: #bfdbfe;
+}
+
+.status-published {
+    background: #ecfdf5;
+    color: #16A34A;
+    border-color: #a7f3d0;
+}
+
+.status-off {
+    background: #fef2f2;
+    color: #F43F5E;
+    border-color: #fecaca;
+}

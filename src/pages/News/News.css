@@ -2,6 +2,8 @@
 
 .news-page {
     padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .news-top {
@@ -9,6 +11,11 @@
     gap: 12px;
     align-items: center;
     margin-bottom: 12px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
 @media (min-width: 768px) {
@@ -287,6 +294,9 @@
     padding: 24px;
     text-align: center;
     color: #64748b;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
 }
 
 .news-status-modal {
@@ -324,16 +334,18 @@
     color: #666;
 }
 
-/* Suavizar desplazamientos (anclajes y scrollIntoView sin 'behavior') */
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
-/* Ancla de resultados: evita que el inicio quede oculto bajo headers fijos */
 .scroll-anchor {
     scroll-margin-top: 80px;
 }
 
 @media (max-width: 640px) {
-    .scroll-anchor { scroll-margin-top: 64px; }
+    .scroll-anchor {
+        scroll-margin-top: 64px;
+    }
 }
 
 .select-sm {

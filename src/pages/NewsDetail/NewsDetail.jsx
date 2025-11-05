@@ -48,7 +48,6 @@ export default function NewsDetail() {
     };
   }, [id]);
 
-  // Cargar "Más leídas" (simple: otras publicadas)
   const [more, setMore] = useState([]);
   useEffect(() => {
     let cancelled = false;
@@ -196,9 +195,29 @@ export default function NewsDetail() {
             <div className="hero placeholder" aria-hidden />
           )}
 
-          {item.categoria && (
+          {(item.categoria || item.estado) && (
             <div className="cat">
-              Sección: <span className="cat-badge">{item.categoria}</span>
+              {item.categoria && (
+                <>
+                  Sección: <span className="cat-badge">{item.categoria}</span>
+                </>
+              )}
+              {(() => {
+                const est = item.estado || item.status;
+                const cls =
+                  est === "Publicado"
+                    ? "status-published"
+                    : est === "Terminado"
+                    ? "status-done"
+                    : est === "Desactivado"
+                    ? "status-off"
+                    : est === "Edición"
+                    ? "status-editing"
+                    : "";
+                return est ? (
+                  <span className={`status-badge ${cls}`}>{est}</span>
+                ) : null;
+              })()}
             </div>
           )}
 

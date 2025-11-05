@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { m as Motion } from "framer-motion";
 import db from "../../FirebaseConfig/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import "./Home.css";
+import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
 
 const Home = () => {
   const [items, setItems] = useState([]);
@@ -44,29 +46,19 @@ const Home = () => {
   }, [items]);
 
   const slides = useMemo(() => {
-    const byCat = new Map();
-    const timeOf = (n) => {
-      const f = n.fechaPublicacion || n.fecha || n.fechaCreacion;
-      if (!f) return 0;
-      try {
-        if (typeof f === "string") return new Date(f).getTime() || 0;
-        if (f?.toDate) return f.toDate().getTime() || 0;
-        return new Date(f).getTime() || 0;
-      } catch {
-        return 0;
-      }
-    };
-    for (const n of sorted) {
-      const cat = n.categoria || "General";
-      const current = byCat.get(cat);
-      if (!current || timeOf(n) > timeOf(current)) byCat.set(cat, n);
-    }
-    return Array.from(byCat.values());
+    const MAX_SLIDES = 3;
+    return sorted.slice(0, Math.min(MAX_SLIDES, sorted.length));
   }, [sorted]);
 
   const recent = useMemo(() => {
     const used = new Set(slides.map((s) => s.id));
     return sorted.filter((n) => !used.has(n.id)).slice(0, 5);
+  }, [sorted, slides]);
+
+  const baseGrid = useMemo(() => {
+    const used = new Set(slides.map((s) => s.id));
+    const rest = sorted.filter((n) => !used.has(n.id));
+    return rest.length ? rest : sorted;
   }, [sorted, slides]);
 
   useEffect(() => {
@@ -80,6 +72,13 @@ const Home = () => {
   useEffect(() => {
     setCurrent(0);
   }, [slides.length]);
+
+  const allCategories = useMemo(() => {
+    const set = new Set();
+    for (const n of sorted) if (n.categoria) set.add(n.categoria);
+    return ["Todas", ...Array.from(set).sort()];
+  }, [sorted]);
+  const [homeCat, setHomeCat] = useState("Todas");
 
   if (loading) return <p style={{ padding: 16 }}>Cargando noticias…</p>;
   if (!items.length)
@@ -162,6 +161,48 @@ const Home = () => {
           </aside>
         </div>
       )}
+
+      <section className="home-section">
+        <div className="section-head">
+          <h2 className="section-title">Más historias</h2>
+          <div
+            className="pills"
+            role="tablist"
+            aria-label="Filtrar por categoría"
+          >
+            {allCategories.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`pill${homeCat === c ? " active" : ""}`}
+                aria-pressed={homeCat === c}
+                onClick={() => setHomeCat(c)}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="home-grid-cards">
+          {baseGrid
+            .filter((n) => homeCat === "Todas" || n.categoria === homeCat)
+            .slice(0, 9)
+            .map((n) => (
+              <Motion.div
+                key={n.id}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                <NewsCard news={n} />
+              </Motion.div>
+            ))}
+          {baseGrid.filter(
+            (n) => homeCat === "Todas" || n.categoria === homeCat
+          ).length === 0 && <p className="aside-empty">Sin datos</p>}
+        </div>
+      </section>
     </div>
   );
 };

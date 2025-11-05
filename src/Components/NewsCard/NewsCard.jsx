@@ -25,17 +25,33 @@ const NewsCard = ({ news }) => {
   };
 
   const imgSrc = news.img || news.imagen;
-  const dateStr = fmtDate(news.fechaPublicacion || news.fecha || news.fechaCreacion || news.createdAt);
+  const dateStr = fmtDate(
+    news.fechaPublicacion || news.fecha || news.fechaCreacion || news.createdAt
+  );
+  const estado = news.estado || news.status;
+  const estadoClass = (() => {
+    if (estado === "Publicado") return "status-published";
+    if (estado === "Terminado") return "status-done";
+    if (estado === "Desactivado") return "status-off";
+    if (estado === "Edición") return "status-editing";
+    return "";
+  })();
 
   return (
-    <Link to={`/noticia/${news.id}`} className="news-card" aria-label={news.titulo || "Noticia"}>
+    <Link
+      to={`/noticia/${news.id}`}
+      className="news-card"
+      aria-label={news.titulo || "Noticia"}
+    >
       <div className="card-figure">
         {imgSrc ? (
           <img
             className="card-img"
             src={imgSrc}
             alt={news.titulo || "Imagen de noticia"}
-            onError={(e) => { e.currentTarget.style.display = "none"; }}
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
         ) : (
           <div className="card-img placeholder" aria-hidden />
@@ -48,6 +64,9 @@ const NewsCard = ({ news }) => {
         <div className="meta">
           {dateStr && <span>{dateStr}</span>}
           {news.autor && <span>• {news.autor}</span>}
+          {estado && (
+            <span className={`status-badge ${estadoClass}`}>{estado}</span>
+          )}
         </div>
       </div>
     </Link>

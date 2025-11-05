@@ -128,6 +128,42 @@
   font-size: .85rem;
 }
 
+.detail-shell .status-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-size: .8rem;
+  margin-left: 8px;
+  border: 1px solid transparent;
+}
+
+.detail-shell .status-editing {
+  background: #f1f5f9;
+  color: #64748B;
+  border-color: #e2e8f0;
+}
+
+.detail-shell .status-done {
+  background: #eff6ff;
+  color: #2563EB;
+  border-color: #bfdbfe;
+}
+
+.detail-shell .status-published {
+  background: #ecfdf5;
+  color: #16A34A;
+  border-color: #a7f3d0;
+}
+
+.detail-shell .status-off {
+  background: #fef2f2;
+  color: #F43F5E;
+  border-color: #fecaca;
+}
+
 .detail-shell .article-body {
   color: #0f172a;
   line-height: 1.9;

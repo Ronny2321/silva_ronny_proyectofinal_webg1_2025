@@ -65,10 +65,51 @@
 
 .featured-title {
   margin: 8px 0 4px;
-  font-size: 1.75rem;
+  font-size: 2rem;
   line-height: 1.2;
   font-weight: 900;
   font-family: Merriweather, Georgia, serif;
+}
+
+@media (min-width: 640px) {
+  .featured-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .featured-title {
+    font-size: 3rem;
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pills {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.pill[aria-pressed="true"],
+.pill.active {
+  background: color-mix(in oklab, var(--accent) 12%, #ffffff);
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 30%, #e5e7eb);
 }
 
 .featured-sub {
@@ -195,14 +236,14 @@
   min-width: 100%;
   text-decoration: none;
   color: inherit;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 21 / 9;
   background: #000;
 }
 
 .slide img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   background: #000;
 }
