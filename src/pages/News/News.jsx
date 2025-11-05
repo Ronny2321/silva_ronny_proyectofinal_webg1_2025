@@ -26,6 +26,7 @@ const News = ({ role }) => {
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [catFilter, setCatFilter] = useState("Todas");
   const [page, setPage] = useState(1);
+  const [reporterFilter, setReporterFilter] = useState("Todos");
   const pageSize = 6;
 
   const { categories: CATEGORIES } = useCategoriesCollection(["Todas"]);
@@ -69,6 +70,21 @@ const News = ({ role }) => {
     loadNews(uid, role);
   }, [uid, role]);
 
+  const reporters = useMemo(() => {
+    const map = new Map();
+    for (const n of news) {
+      const id = n.authorId || `email:${n.autor || "(sin autor)"}`;
+      const label = n.autor || "(sin autor)";
+      if (!map.has(id)) map.set(id, { id, label });
+    }
+    return [
+      { id: "Todos", label: "Reportero" },
+      ...Array.from(map.values()).sort((a, b) =>
+        a.label.localeCompare(b.label, "es", { sensitivity: "base" })
+      ),
+    ];
+  }, [news]);
+
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return news.filter((n) => {
@@ -82,9 +98,13 @@ const News = ({ role }) => {
       const byCat =
         catFilter === "Todas" ||
         (n.categoria || n.section || "").toString() === catFilter;
-      return byTerm && byStatus && byCat;
+      const byReporter =
+        reporterFilter === "Todos" ||
+        n.authorId === reporterFilter ||
+        (!n.authorId && `email:${n.autor || "(sin autor)"}` === reporterFilter);
+      return byTerm && byStatus && byCat && byReporter;
     });
-  }, [news, search, statusFilter, catFilter]);
+  }, [news, search, statusFilter, catFilter, reporterFilter]);
 
   const total = news.length;
   const totalPublicadas = news.filter(
@@ -167,6 +187,24 @@ const News = ({ role }) => {
               )
             )}
           </select>
+          {role === "Editor" && (
+            <select
+              className="select"
+              value={reporterFilter}
+              onChange={(e) => {
+                setReporterFilter(e.target.value);
+                setPage(1);
+              }}
+              aria-label="Filtrar por reportero"
+              title="Filtrar por reportero"
+            >
+              {reporters.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          )}
           {role !== "Editor" && (
             <Link
               className="btn-primary btn-create"
