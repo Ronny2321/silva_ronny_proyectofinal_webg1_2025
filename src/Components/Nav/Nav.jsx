@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signOut } from "firebase/auth";
@@ -8,6 +9,15 @@ const Nav = ({ user, role }) => {
   const { pathname } = useLocation();
   const [open, setOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    if (open) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+    return () => document.body.classList.remove("no-scroll");
+  }, [open]);
+
   const isActive = (to) => pathname === to;
   const initial = (user?.displayName || user?.email || "?")
     .trim()
@@ -15,8 +25,8 @@ const Nav = ({ user, role }) => {
     .toUpperCase();
 
   return (
-    <header className="news-nav">
-      <div className="nav-container">
+    <header className="news-nav sticky top-0 z-50 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+      <div className="nav-container container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="brand">
           <Link to="/home" className="brand-link" aria-label="Ir al inicio">
             <span className="brand-badge">UA</span>
@@ -24,7 +34,10 @@ const Nav = ({ user, role }) => {
           </Link>
         </div>
 
-        <nav className="menu menu-desktop" aria-label="Secciones">
+        <nav
+          className="menu menu-desktop hidden md:flex gap-6"
+          aria-label="Secciones"
+        >
           <Link
             className={`menu-link ${isActive("/home") ? "active" : ""}`}
             to="/home"
@@ -36,11 +49,12 @@ const Nav = ({ user, role }) => {
           </Link>
         </nav>
 
-        <div className="actions">
+        <div className="actions flex items-center gap-3">
           <button
-            className={`hamburger ${open ? "is-open" : ""}`}
+            className={`hamburger ${open ? "is-open" : ""} md:hidden`}
             aria-label="Abrir menú"
             aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
           >
             <span />
@@ -48,7 +62,7 @@ const Nav = ({ user, role }) => {
             <span />
           </button>
 
-          <div className="actions-desktop">
+          <div className="actions-desktop hidden md:inline-flex items-center gap-3">
             {user ? (
               <div className="user-area">
                 {role === "Reportero" && (
@@ -79,82 +93,83 @@ const Nav = ({ user, role }) => {
         </div>
       </div>
 
-      <div
-        className={`mobile-overlay ${open ? "show" : ""}`}
-        onClick={() => setOpen(false)}
-      />
-      <aside
-        className={`mobile-panel ${open ? "show" : ""}`}
-        aria-hidden={!open}
-      >
-        <nav className="mobile-menu" aria-label="Menú móvil">
-          <Link
-            className="mobile-link"
-            to="/home"
+      {createPortal(
+        <>
+          <div
+            className={`mobile-overlay ${open ? "show" : ""}`}
             onClick={() => setOpen(false)}
+          />
+          <aside
+            id="mobile-menu"
+            className={`mobile-panel ${open ? "show" : ""}`}
+            aria-hidden={!open}
+            role="dialog"
+            aria-modal={open}
           >
-            Inicio
-          </Link>
-          <Link className="mobile-link" to="/" onClick={() => setOpen(false)}>
-            Noticias
-          </Link>
-          <a
-            className="mobile-link"
-            href="/home#tecnologia"
-            onClick={() => setOpen(false)}
-          >
-            Tecnología
-          </a>
-          <a
-            className="mobile-link"
-            href="/home#deportes"
-            onClick={() => setOpen(false)}
-          >
-            Deportes
-          </a>
-          <hr className="mobile-sep" />
-          {user ? (
-            <>
-              {role === "Reportero" && (
-                <>
-                  <Link
-                    className="mobile-link"
-                    to="/crear"
-                    onClick={() => setOpen(false)}
-                  >
-                    Crear
-                  </Link>
-                  <Link
-                    className="mobile-link"
-                    to="/categorias"
-                    onClick={() => setOpen(false)}
-                  >
-                    Categorías
-                  </Link>
-                  <hr className="mobile-sep" />
-                </>
-              )}
-              <button
-                className="mobile-logout"
-                onClick={() => {
-                  setOpen(false);
-                  signOut(auth);
-                }}
-              >
-                Cerrar sesión
-              </button>
-            </>
-          ) : (
-            <Link
-              className="mobile-login"
-              to="/login"
-              onClick={() => setOpen(false)}
+            <nav
+              className="mobile-menu flex flex-col space-y-4 p-4 text-lg font-semibold"
+              aria-label="Menú móvil"
             >
-              Iniciar sesión
-            </Link>
-          )}
-        </nav>
-      </aside>
+              <Link
+                className="mobile-link"
+                to="/home"
+                onClick={() => setOpen(false)}
+              >
+                Inicio
+              </Link>
+              <Link
+                className="mobile-link"
+                to="/"
+                onClick={() => setOpen(false)}
+              >
+                Noticias
+              </Link>
+              <hr className="mobile-sep" />
+              {user ? (
+                <>
+                  {role === "Reportero" && (
+                    <>
+                      <Link
+                        className="mobile-link"
+                        to="/crear"
+                        onClick={() => setOpen(false)}
+                      >
+                        Crear
+                      </Link>
+                      <Link
+                        className="mobile-link"
+                        to="/categorias"
+                        onClick={() => setOpen(false)}
+                      >
+                        Categorías
+                      </Link>
+                      <hr className="mobile-sep" />
+                    </>
+                  )}
+                  <button
+                    className="mobile-logout"
+                    onClick={() => {
+                      setOpen(false);
+                      signOut(auth);
+                    }}
+                  >
+                    Cerrar sesión
+                  </button>
+                </>
+              ) : (
+                <Link
+                  className="mobile-login"
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                >
+                  Iniciar sesión
+                </Link>
+              )}
+            </nav>
+          </aside>
+        </>,
+        document.body
+      )}
     </header>
   );
 };

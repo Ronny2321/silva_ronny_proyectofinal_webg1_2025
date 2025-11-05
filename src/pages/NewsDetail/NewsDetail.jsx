@@ -116,7 +116,7 @@ export default function NewsDetail() {
   };
 
   return (
-    <div className="detail-shell">
+    <div className="detail-shell container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="detail-grid">
         <article className="article">
           <div className="back-share">
@@ -180,8 +180,14 @@ export default function NewsDetail() {
             </div>
           </div>
 
-          <h1 className="title">{item.titulo}</h1>
-          {item.subtitulo && <p className="subtitle">{item.subtitulo}</p>}
+          <h1 className="title text-2xl sm:text-3xl md:text-4xl font-serif">
+            {item.titulo}
+          </h1>
+          {item.subtitulo && (
+            <p className="subtitle text-sm sm:text-base md:text-lg">
+              {item.subtitulo}
+            </p>
+          )}
           {fechaStr && (
             <p className="meta">
               Publicado: {fechaStr}
@@ -190,9 +196,16 @@ export default function NewsDetail() {
           )}
 
           {item.imagen ? (
-            <img className="hero" src={item.imagen} alt={item.titulo} />
+            <img
+              className="hero w-full h-auto rounded-xl aspect-video object-cover"
+              src={item.imagen}
+              alt={item.titulo}
+            />
           ) : (
-            <div className="hero placeholder" aria-hidden />
+            <div
+              className="hero placeholder w-full rounded-xl aspect-video"
+              aria-hidden
+            />
           )}
 
           {(item.categoria || item.estado) && (

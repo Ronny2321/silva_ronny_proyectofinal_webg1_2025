@@ -40,10 +40,10 @@ const NewsCard = ({ news }) => {
   return (
     <Link
       to={`/noticia/${news.id}`}
-      className="news-card"
+      className="news-card flex flex-col rounded-xl overflow-hidden transition-transform duration-200 ease-in-out hover:scale-[1.01]"
       aria-label={news.titulo || "Noticia"}
     >
-      <div className="card-figure">
+      <div className="card-figure w-full aspect-video bg-slate-200">
         {imgSrc ? (
           <img
             className="card-img"
@@ -58,9 +58,13 @@ const NewsCard = ({ news }) => {
         )}
         {news.categoria && <span className="badge">{news.categoria}</span>}
       </div>
-      <div className="card-content">
-        <h3 className="title">{news.titulo || "Sin título"}</h3>
-        {news.subtitulo && <p className="subtitle">{news.subtitulo}</p>}
+      <div className="card-content p-3 grid gap-1">
+        <h3 className="title text-base sm:text-lg md:text-xl font-serif">
+          {news.titulo || "Sin título"}
+        </h3>
+        {news.subtitulo && (
+          <p className="subtitle text-sm sm:text-base">{news.subtitulo}</p>
+        )}
         <div className="meta">
           {dateStr && <span>{dateStr}</span>}
           {news.autor && <span>• {news.autor}</span>}

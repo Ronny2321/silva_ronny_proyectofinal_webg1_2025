@@ -6,34 +6,45 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="site-footer" role="contentinfo">
-      <div className="footer-inner">
+    <footer
+      className="site-footer bg-slate-900 text-slate-300 dark:bg-black dark:text-slate-400"
+      role="contentinfo"
+    >
+      <div className="footer-inner container mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
         <div className="col about">
-          <h4 className="ft-title">Sobre Noticias UA</h4>
-          <p className="ft-about">
+          <h4 className="ft-title font-bold text-lg mb-3">Sobre Noticias UA</h4>
+          <p className="ft-about text-slate-400">
             Noticias UA ofrece cobertura ágil y confiable de la actualidad en
             todo el mundo.
           </p>
         </div>
         <div className="col contact">
-          <h4 className="ft-title">Contacto</h4>
-          <ul className="ft-links">
+          <h4 className="ft-title font-bold text-lg mb-3">Contacto</h4>
+          <ul className="ft-links space-y-2">
             <li>
-              <a href="mailto:contacto@noticiasua.com">
+              <a
+                href="mailto:contacto@noticiasua.com"
+                className="hover:underline underline-offset-4 transition-all"
+              >
                 contacto@noticiasua.com
               </a>
             </li>
             <li>
-              <a href="tel:+573001234567">+57 300 123 4567</a>
+              <a
+                href="tel:+573001234567"
+                className="hover:underline underline-offset-4 transition-all"
+              >
+                +57 300 123 4567
+              </a>
             </li>
           </ul>
         </div>
 
         <div className="col social">
-          <h4 className="ft-title">Redes</h4>
-          <div className="ft-social">
+          <h4 className="ft-title font-bold text-lg mb-3">Redes</h4>
+          <div className="ft-social inline-flex gap-3 justify-center sm:justify-start">
             <a
-              className="social-btn"
+              className="social-btn rounded-full hover:bg-[#1E3A8A] hover:text-white transition-all duration-200 ease-in-out hover:scale-105"
               href="https://twitter.com/"
               target="_blank"
               rel="noopener noreferrer"
@@ -50,7 +61,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              className="social-btn"
+              className="social-btn rounded-full hover:bg-[#1E3A8A] hover:text-white transition-all duration-200 ease-in-out hover:scale-105"
               href="https://facebook.com/"
               target="_blank"
               rel="noopener noreferrer"
@@ -67,7 +78,7 @@ const Footer = () => {
               </svg>
             </a>
             <a
-              className="social-btn"
+              className="social-btn rounded-full hover:bg-[#1E3A8A] hover:text-white transition-all duration-200 ease-in-out hover:scale-105"
               href="https://instagram.com/"
               target="_blank"
               rel="noopener noreferrer"
@@ -92,8 +103,10 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="footer-legal">
-        <p>© {year} Noticias UA — Todos los derechos reservados</p>
+      <div className="footer-legal border-t border-white/10 mt-8 pt-4">
+        <p className="text-center text-sm text-slate-500">
+          © {year} Noticias UA — Todos los derechos reservados
+        </p>
       </div>
     </footer>
   );

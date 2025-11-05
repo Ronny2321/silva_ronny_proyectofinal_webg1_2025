@@ -89,7 +89,7 @@ const Home = () => {
     return <p style={{ padding: 16 }}>No hay noticias publicadas.</p>;
 
   return (
-    <div className="home-shell">
+    <div className="home-shell container mx-auto px-4 sm:px-6 lg:px-8">
       {slides.length > 0 && (
         <>
           <div className="section-head">
@@ -177,9 +177,11 @@ const Home = () => {
         </>
       )}
 
-      <section className="home-section">
+      <section className="home-section py-4 sm:py-6 md:py-10">
         <div className="section-head">
-          <h2 className="section-title">Más noticias</h2>
+          <h2 className="section-title text-xl sm:text-2xl md:text-3xl">
+            Más noticias
+          </h2>
           <div
             className="pills"
             role="tablist"
