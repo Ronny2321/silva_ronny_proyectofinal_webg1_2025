@@ -34,7 +34,6 @@ const Nav = ({ user, role }) => {
           <Link className={`menu-link ${isActive("/") ? "active" : ""}`} to="/">
             Noticias
           </Link>
-          
         </nav>
 
         <div className="actions">
@@ -55,7 +54,7 @@ const Nav = ({ user, role }) => {
                 {role === "Reportero" && (
                   <div className="reporter-links">
                     <Link className="small-link" to="/crear">
-                      Crear
+                      Crear noticia
                     </Link>
                     <Link className="small-link" to="/categorias">
                       Categorías

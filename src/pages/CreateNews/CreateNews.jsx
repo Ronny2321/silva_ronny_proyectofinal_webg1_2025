@@ -77,6 +77,16 @@ const CreateNews = ({ role: roleProp }) => {
   return (
     <>
       <div className="create-page">
+        <div className="back-bar">
+          <button
+            type="button"
+            className="back-link"
+            onClick={() => nav("/home")}
+            aria-label="Volver al inicio"
+          >
+            Volver
+          </button>
+        </div>
         <h2 className="create-title">Crear noticia</h2>
         <p className="create-sub">
           Completa los campos y visualiza una vista previa en tiempo real.

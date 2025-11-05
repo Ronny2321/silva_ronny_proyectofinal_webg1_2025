@@ -4,6 +4,29 @@
     padding: 16px;
 }
 
+/* Volver */
+.back-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 0 8px;
+}
+
+.back-link {
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #0654a3;
+    color: #e5e7eb;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.back-link:hover {
+    background: #075db3;
+}
+
 .create-title {
     margin: 0 0 8px;
     font-weight: 800;

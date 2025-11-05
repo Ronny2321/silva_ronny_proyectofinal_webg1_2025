@@ -122,7 +122,7 @@
     padding: 0 10px;
     border-radius: 9999px;
     background: #f1f5f9;
-    color: #0f172a;
+    color: #2752b8;
     font-weight: 700;
     font-size: .9rem;
 }
@@ -134,7 +134,18 @@
 
 .stat-chip.warn {
     background: #fff7ed;
-    color: #9a3412;
+    color: #d1b411;
+}
+
+.stat-chip.alert {
+    background: #fff7ed;
+    color: #e64809;
+}
+
+/* Desactivadas */
+.stat-chip.off {
+    background: #f1f5f9;
+    color: #475569;
 }
 
 .cards {

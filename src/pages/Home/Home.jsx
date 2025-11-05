@@ -27,7 +27,6 @@ const Home = () => {
     load();
   }, []);
 
-  // Derivar destacada y recientes (cliente) usando fecha conocida
   const sorted = useMemo(() => {
     const toTime = (n) => {
       const f = n.fechaPublicacion || n.fecha || n.fechaCreacion;
