@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -34,6 +34,9 @@ const News = ({ role }) => {
   const [savingId, setSavingId] = useState(null);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [statusModalText, setStatusModalText] = useState("");
+
+  const listTopRef = useRef(null);
+  const didMountRef = useRef(false);
 
   const { categories: CATEGORIES } = useCategoriesCollection(["Todas"]);
 
@@ -75,6 +78,18 @@ const News = ({ role }) => {
     }
     loadNews(uid, role);
   }, [uid, role]);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    if (listTopRef.current) {
+      listTopRef.current.scrollIntoView({ block: "start" });
+    } else {
+      window.scrollTo({ top: 0 });
+    }
+  }, [page]);
 
   const reporters = useMemo(() => {
     const map = new Map();
@@ -263,6 +278,7 @@ const News = ({ role }) => {
         </div>
       )}
 
+      <div ref={listTopRef} className="scroll-anchor" />
       <div className="cards">
         {paginated.map((n) => (
           <div className="card-wrap" key={n.id}>
