@@ -51,60 +51,60 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Header user={usuario} role={role} />
-        <Box component="main" sx={{ minHeight: 'calc(100vh - 160px)', py: 3 }}>
+        <Box component="main" sx={{ minHeight: "calc(100vh - 160px)", py: 3 }}>
           <Container maxWidth="lg">
             <Routes>
-        <Route path="/inicio" element={<Home />} />
-        <Route
-          path="/login"
-          element={usuario ? <Navigate to="/" replace /> : <Login />}
-        />
-        <Route path="/home" element={<Home />} />
-        <Route path="/noticia/:id" element={<NewsDetail />} />
-        <Route
-          path="/register"
-          element={usuario ? <Navigate to="/" replace /> : <Register />}
-        />
-        <Route
-          path="/"
-          element={
-            usuario ? (
-              <>
-                <News role={role} />
-              </>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/crear"
-          element={
-            usuario ? (
-              role === "Editor" ? (
-                <Navigate to="/" replace />
-              ) : (
-                <CreateNews role={role} />
-              )
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/categorias"
-          element={
-            usuario ? (
-              role === "Reportero" ? (
-                <Categorias />
-              ) : (
-                <Navigate to="/" replace />
-              )
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+              <Route path="/inicio" element={<Home />} />
+              <Route
+                path="/login"
+                element={usuario ? <Navigate to="/" replace /> : <Login />}
+              />
+              <Route path="/home" element={<Home />} />
+              <Route path="/noticia/:id" element={<NewsDetail />} />
+              <Route
+                path="/register"
+                element={usuario ? <Navigate to="/" replace /> : <Register />}
+              />
+              <Route
+                path="/"
+                element={
+                  usuario ? (
+                    <>
+                      <News role={role} />
+                    </>
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+              <Route
+                path="/crear"
+                element={
+                  usuario ? (
+                    role === "Editor" ? (
+                      <Navigate to="/" replace />
+                    ) : (
+                      <CreateNews role={role} />
+                    )
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+              <Route
+                path="/categorias"
+                element={
+                  usuario ? (
+                    role === "Reportero" ? (
+                      <Categorias />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
               <Route
                 path="*"
                 element={<Navigate to={usuario ? "/" : "/home"} replace />}
@@ -112,7 +112,7 @@ function App() {
             </Routes>
           </Container>
         </Box>
-        <Footer />
+        <Footer role={role} />
       </BrowserRouter>
     </ThemeProvider>
   );

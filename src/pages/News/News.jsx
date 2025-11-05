@@ -194,13 +194,11 @@ const News = ({ role }) => {
       </div>
 
       {role === "Reportero" && (
-        <div className="summary">
+        <div className="summary" aria-label="Resumen de mis noticias">
           <span className="stat-chip">Total: {total}</span>
           <span className="stat-chip ok">Publicadas: {totalPublicadas}</span>
           <span className="stat-chip warn">Pendientes: {totalPendientes}</span>
-          <span className="stat-chip off">
-            Desactivadas: {totalDesactivadas}
-          </span>
+          <span className="stat-chip">Desactivadas: {totalDesactivadas}</span>
         </div>
       )}
 
