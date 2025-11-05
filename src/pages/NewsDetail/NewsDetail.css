@@ -24,13 +24,20 @@
 }
 
 .detail-shell .back-link {
-  color: var(--accent, #1e3a8a);
-  text-decoration: none;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #0654a3;
+  color: #e5e7eb;
   font-weight: 800;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .detail-shell .back-link:hover {
-  text-decoration: underline;
+  background: #075db3;
 }
 
 .detail-shell .share {
