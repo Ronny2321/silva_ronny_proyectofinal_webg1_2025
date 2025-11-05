@@ -124,6 +124,14 @@ const News = ({ role }) => {
     currentPage * pageSize
   );
 
+  const clearFilters = () => {
+    setSearch("");
+    setStatusFilter("Todos");
+    setCatFilter("Todas");
+    setReporterFilter("Todos");
+    setPage(1);
+  };
+
   return (
     <div className="news-page">
       <div className="news-top">
@@ -205,6 +213,15 @@ const News = ({ role }) => {
               ))}
             </select>
           )}
+          <button
+            type="button"
+            className="btn-clear"
+            onClick={clearFilters}
+            title="Limpiar filtros"
+            aria-label="Limpiar filtros"
+          >
+            Limpiar
+          </button>
           {role !== "Editor" && (
             <Link
               className="btn-primary btn-create"

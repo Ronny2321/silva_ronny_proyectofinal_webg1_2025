@@ -227,6 +227,33 @@
     box-shadow: 0 0 0 4px rgba(30, 58, 138, .18);
 }
 
+.btn-clear {
+    height: 40px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--accent);
+    border-radius: 9999px;
+    background: #fff;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-clear:hover {
+    background: color-mix(in oklab, var(--accent) 8%, #ffffff);
+}
+
+.btn-clear:active {
+    transform: translateY(1px);
+}
+
+.btn-clear:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, .18);
+}
+
 .pager {
     display: flex;
     gap: 8px;
