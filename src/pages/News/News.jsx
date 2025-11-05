@@ -1,33 +1,39 @@
-import { useState, useEffect, useMemo } from "react";
-import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
-import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
+  doc,
   getDocs,
   query,
-  where,
-  updateDoc,
-  doc,
   serverTimestamp,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
-import { Link } from "react-router-dom";
-import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
+
+import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
+import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
+import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
+import Modal from "../../Components/Modal/Modal.jsx";
 import "./News.css";
 
 const News = ({ role }) => {
   const [news, setNews] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
-  const [savingId, setSavingId] = useState(null);
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [catFilter, setCatFilter] = useState("Todas");
-  const [page, setPage] = useState(1);
   const [reporterFilter, setReporterFilter] = useState("Todos");
+  const [page, setPage] = useState(1);
   const pageSize = 6;
+
+  const [editingId, setEditingId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [savingId, setSavingId] = useState(null);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [statusModalText, setStatusModalText] = useState("");
 
   const { categories: CATEGORIES } = useCategoriesCollection(["Todas"]);
 
@@ -286,6 +292,8 @@ const News = ({ role }) => {
                               it.id === n.id ? { ...it, estado: val } : it
                             )
                           );
+                          setStatusModalText(`Estado actualizado a "${val}"`);
+                          setStatusModalOpen(true);
                         } catch (e) {
                           console.error("Error actualizando estado", e);
                         } finally {
@@ -357,9 +365,44 @@ const News = ({ role }) => {
         onClose={async (saved) => {
           setIsModalOpen(false);
           setEditingId(null);
-          if (saved && uid) await loadNews(uid, role);
+          if (saved && uid) {
+            await loadNews(uid, role);
+            setStatusModalText("Cambios guardados correctamente");
+            setStatusModalOpen(true);
+          }
         }}
       />
+
+      <Modal
+        open={statusModalOpen}
+        onClose={() => setStatusModalOpen(false)}
+        title="Operación exitosa"
+        maxWidth="sm"
+        primaryText="Aceptar"
+        onPrimary={() => setStatusModalOpen(false)}
+      >
+        <div className="news-status-modal">
+          <div className="news-status-icon" aria-hidden>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </div>
+          <div>
+            <p className="news-status-text">
+              {statusModalText || "Estado actualizado correctamente"}
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
@@ -371,10 +414,24 @@ const EditorStatusSelector = ({
   disabled,
   onChange,
 }) => {
+  const statusClass =
+    current === "Publicado"
+      ? "is-published"
+      : current === "Terminado"
+      ? "is-done"
+      : current === "Desactivado"
+      ? "is-off"
+      : "is-editing";
   return (
-    <label style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      Estado:
+    <label className="editor-status-label">
+      <span className="label-text">Estado:</span>
+      <span
+        className={`status-dot ${statusClass}`}
+        title={current}
+        aria-hidden
+      ></span>
       <select
+        className="select-sm"
         value={current}
         onChange={(e) => onChange(e.target.value)}
         disabled={saving || disabled}
@@ -385,9 +442,7 @@ const EditorStatusSelector = ({
           </option>
         ))}
       </select>
-      {saving && (
-        <span style={{ fontSize: 12, color: "#666" }}>Guardando...</span>
-      )}
+      {saving && <span className="saving-text">Guardando...</span>}
     </label>
   );
 };
