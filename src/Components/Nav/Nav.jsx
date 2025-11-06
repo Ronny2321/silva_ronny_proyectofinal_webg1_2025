@@ -29,8 +29,8 @@ const Nav = ({ user, role }) => {
       <div className="nav-container container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="brand">
           <Link to="/home" className="brand-link" aria-label="Ir al inicio">
-            <span className="brand-badge">UA</span>
-            <span className="brand-name">Noticias UA</span>
+            <span className="brand-badge">UDLA</span>
+            <span className="brand-name">Noticias UDLA</span>
           </Link>
         </div>
 
