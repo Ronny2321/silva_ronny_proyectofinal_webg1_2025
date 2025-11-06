@@ -90,7 +90,7 @@ const Register = () => {
         aria-labelledby="reg-title"
       >
         <div className="card-header">
-          <div className="logo">UA</div>
+          <div className="logo">UDLA</div>
           <h1 id="reg-title">Crear cuenta</h1>
           <p className="sub">
             Regístrate para publicar y gestionar tus noticias.

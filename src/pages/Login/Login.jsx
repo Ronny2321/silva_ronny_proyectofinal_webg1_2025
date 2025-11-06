@@ -55,7 +55,7 @@ const Login = () => {
       <div className="bg-texture" aria-hidden />
       <section className="login-card appear">
         <div className="card-header">
-          <div className="logo">UA</div>
+          <div className="logo">UDLA</div>
           <h1>Bienvenido</h1>
           <p className="sub">Accede a tu cuenta para gestionar tus noticias.</p>
         </div>
