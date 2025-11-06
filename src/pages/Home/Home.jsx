@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { m as Motion } from "framer-motion";
 import db from "../../FirebaseConfig/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import "./Home.css";
@@ -205,14 +204,9 @@ const Home = () => {
             .filter((n) => homeCat === "Todas" || n.categoria === homeCat)
             .slice(0, 9)
             .map((n) => (
-              <Motion.div
-                key={n.id}
-                initial={false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              >
+              <div key={n.id} className="card-wrap">
                 <NewsCard news={n} />
-              </Motion.div>
+              </div>
             ))}
           {baseGrid.filter(
             (n) => homeCat === "Todas" || n.categoria === homeCat
