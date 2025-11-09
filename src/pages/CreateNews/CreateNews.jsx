@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
+import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./CreateNews.css";
 
 const CreateNews = ({ role: roleProp }) => {
@@ -12,6 +13,8 @@ const CreateNews = ({ role: roleProp }) => {
   const [role, setRole] = useState(roleProp || null);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState({ open: false, title: "", text: "" });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const nav = useNavigate();
 
   const allowedStatuses = useMemo(
@@ -40,16 +43,53 @@ const CreateNews = ({ role: roleProp }) => {
     return () => unsub();
   }, [roleProp]);
 
+  useEffect(() => {
+    return () => {
+      if (selectedFile && noticia.imagen?.startsWith("blob:")) {
+        URL.revokeObjectURL(noticia.imagen);
+      }
+    };
+  }, [selectedFile, noticia.imagen]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const tempUrl = URL.createObjectURL(file);
+      setNoticia((prev) => ({ ...prev, imagen: tempUrl }));
+    }
+  };
+
   const handleSave = async () => {
+    if (!noticia.titulo?.trim()) {
+      setNotice({
+        open: true,
+        title: "Campo requerido",
+        text: "El título es obligatorio para crear la noticia.",
+      });
+      return;
+    }
+
+    if (!noticia.contenido?.trim()) {
+      setNotice({
+        open: true,
+        title: "Campo requerido",
+        text: "El contenido es obligatorio para crear la noticia.",
+      });
+      return;
+    }
+
     try {
       setSaving(true);
       const colRef = collection(db, "Noticias");
       const nowHuman = new Date().toLocaleDateString("es-CO");
       const chosen = noticia.estado ?? "Edición";
       const finalStatus = allowedStatuses.includes(chosen) ? chosen : "Edición";
-      await addDoc(colRef, {
-        ...noticia,
-        contenido: noticia.contenido ?? noticia.noticia,
+
+      const newsData = {
+        titulo: noticia.titulo || "",
+        subtitulo: noticia.subtitulo || "",
+        contenido: noticia.contenido ?? noticia.noticia ?? "",
         categoria:
           noticia.categoria || noticia.section || CATEGORIES[0] || "General",
         estado: finalStatus,
@@ -57,14 +97,78 @@ const CreateNews = ({ role: roleProp }) => {
         authorId: currentUser?.uid || "",
         fechaCreacion: nowHuman,
         fechaActualizacion: nowHuman,
-      });
-      setNotice({
-        open: true,
-        title: "Noticia creada",
-        text: `Se creó "${noticia.titulo || "Nueva noticia"}" correctamente.`,
-      });
+        imagen:
+          selectedFile || noticia.imagen?.startsWith("blob:")
+            ? ""
+            : noticia.imagen || "",
+      };
+
+      const docRef = await addDoc(colRef, newsData);
+      const newsId = docRef.id;
+
+      if (selectedFile) {
+        setUploadingImage(true);
+        try {
+          const result = await uploadImage(selectedFile, `noticia-${newsId}`);
+
+          if (result && result.success) {
+            await updateDoc(doc(db, "Noticias", newsId), {
+              imagen: result.url,
+              fechaActualizacion: nowHuman,
+            });
+
+            setNotice({
+              open: true,
+              title: "Noticia creada con imagen",
+              text: `Se creó "${
+                noticia.titulo || "Nueva noticia"
+              }" con imagen correctamente.`,
+            });
+          } else {
+            setNotice({
+              open: true,
+              title: "Noticia creada (sin imagen)",
+              text: `Se creó "${
+                noticia.titulo || "Nueva noticia"
+              }" pero falló la subida de imagen: ${
+                result?.error || "Error desconocido"
+              }`,
+            });
+          }
+        } catch (imageError) {
+          console.error("Error subiendo imagen:", imageError);
+          setNotice({
+            open: true,
+            title: "Noticia creada (error en imagen)",
+            text: `Se creó "${
+              noticia.titulo || "Nueva noticia"
+            }" pero hubo un error al subir la imagen.`,
+          });
+        } finally {
+          setUploadingImage(false);
+        }
+      } else {
+        setNotice({
+          open: true,
+          title: "Noticia creada",
+          text: `Se creó "${noticia.titulo || "Nueva noticia"}" correctamente.`,
+        });
+      }
+
+      setTimeout(() => {
+        if (noticia.imagen?.startsWith("blob:")) {
+          URL.revokeObjectURL(noticia.imagen);
+        }
+        setNoticia({});
+        setSelectedFile(null);
+      }, 2000);
     } catch (e) {
       console.error("Error guardando noticia", e);
+      setNotice({
+        open: true,
+        title: "Error",
+        text: "Hubo un error al guardar la noticia. Inténtalo de nuevo.",
+      });
     } finally {
       setSaving(false);
     }
@@ -127,18 +231,54 @@ const CreateNews = ({ role: roleProp }) => {
 
             <div className="group">
               <label className="label" htmlFor="imagen">
-                Imagen (URL)
+                Imagen
               </label>
-              <input
-                id="imagen"
-                className="input"
-                type="text"
-                placeholder="https://..."
-                value={noticia.imagen || ""}
-                onChange={(e) =>
-                  setNoticia({ ...noticia, imagen: e.target.value })
-                }
-              />
+              <div className="image-upload-container">
+                <input
+                  type="file"
+                  id="image-file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input"
+                  style={{ display: "none" }}
+                />
+                <label htmlFor="image-file" className="upload-button">
+                  {uploadingImage
+                    ? "Subiendo..."
+                    : selectedFile
+                    ? `📁 ${selectedFile.name}`
+                    : "Seleccionar imagen"}
+                </label>
+                {selectedFile && (
+                  <div
+                    style={{
+                      fontSize: "0.8rem",
+                      color: "#059669",
+                      marginTop: "4px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    ✅ Archivo listo para subir al crear la noticia
+                  </div>
+                )}
+                <input
+                  id="imagen"
+                  className="input"
+                  type="text"
+                  placeholder="O pega una URL: https://..."
+                  value={selectedFile ? "" : noticia.imagen || ""}
+                  onChange={(e) => {
+                    setSelectedFile(null);
+                    setNoticia({ ...noticia, imagen: e.target.value });
+                  }}
+                  disabled={!!selectedFile}
+                />
+              </div>
+              {noticia.imagen && (
+                <div className="image-preview-small">
+                  <img src={noticia.imagen} alt="Preview" />
+                </div>
+              )}
             </div>
 
             <div className="group">
@@ -229,9 +369,13 @@ const CreateNews = ({ role: roleProp }) => {
               <button
                 className="btn-primary btn-lg"
                 onClick={handleSave}
-                disabled={saving}
+                disabled={saving || uploadingImage}
               >
-                {saving ? "Guardando…" : "Publicar"}
+                {saving
+                  ? uploadingImage
+                    ? "Subiendo imagen..."
+                    : "Guardando noticia..."
+                  : "Publicar"}
               </button>
             </div>
           </section>

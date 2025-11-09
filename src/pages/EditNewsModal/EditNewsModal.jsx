@@ -3,6 +3,7 @@ import Modal from "../../Components/Modal/Modal.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig.js";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
+import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./EditNewsModal.css";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
@@ -31,7 +32,42 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const [estado, setStatus] = useState("Edición");
   const [toastOk, setToastOk] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const timers = useRef([]);
+
+  const handleImageUpload = async () => {
+    if (!selectedFile) return;
+
+    setUploadingImage(true);
+    try {
+      const result = await uploadImage(
+        selectedFile,
+        `editnews-${newsId}-${Date.now()}`
+      );
+      if (result.success) {
+        setForm((prev) => ({ ...prev, imagen: result.url }));
+      } else {
+        setError(result.error || "Error al subir la imagen");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setError("Error al subir la imagen");
+    } finally {
+      setUploadingImage(false);
+      setSelectedFile(null);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setTimeout(() => {
+        handleImageUpload();
+      }, 100);
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -232,24 +268,44 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
 
         <div className="group">
           <label className="label" htmlFor="imagen">
-            Imagen (URL)
+            Imagen
           </label>
-          <input
-            id="imagen"
-            type="url"
-            className="input"
-            value={form.imagen}
-            onChange={(e) => setForm({ ...form, imagen: e.target.value })}
-            placeholder="https://..."
-            disabled={role === "Reportero" && published}
-          />
-          {form.imagen && (
-            <img
-              className="em-preview"
-              src={form.imagen}
-              alt="Vista previa"
-              onError={(e) => (e.currentTarget.style.display = "none")}
+          <div className="image-upload-container">
+            <input
+              type="file"
+              id="edit-image-file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="file-input"
+              style={{ display: "none" }}
+              disabled={role === "Reportero" && published}
             />
+            <label
+              htmlFor="edit-image-file"
+              className={`upload-button ${
+                role === "Reportero" && published ? "disabled" : ""
+              }`}
+            >
+              {uploadingImage ? "Subiendo..." : "Seleccionar imagen"}
+            </label>
+            <input
+              id="imagen"
+              type="url"
+              className="input"
+              value={form.imagen}
+              onChange={(e) => setForm({ ...form, imagen: e.target.value })}
+              placeholder="O pega una URL: https://..."
+              disabled={role === "Reportero" && published}
+            />
+          </div>
+          {form.imagen && (
+            <div className="image-preview-small">
+              <img
+                src={form.imagen}
+                alt="Vista previa"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+            </div>
           )}
         </div>
       </div>
