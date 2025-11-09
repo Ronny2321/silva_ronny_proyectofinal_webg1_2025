@@ -36,36 +36,11 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const timers = useRef([]);
 
-  const handleImageUpload = async () => {
-    if (!selectedFile) return;
-
-    setUploadingImage(true);
-    try {
-      const result = await uploadImage(
-        selectedFile,
-        `editnews-${newsId}-${Date.now()}`
-      );
-      if (result.success) {
-        setForm((prev) => ({ ...prev, imagen: result.url }));
-      } else {
-        setError(result.error || "Error al subir la imagen");
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      setError("Error al subir la imagen");
-    } finally {
-      setUploadingImage(false);
-      setSelectedFile(null);
-    }
-  };
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
-      setTimeout(() => {
-        handleImageUpload();
-      }, 100);
+      event.target.value = "";
     }
   };
 
@@ -74,6 +49,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
       if (!open || !newsId) return;
       setLoading(true);
       setError("");
+      setSelectedFile(null);
       try {
         const ref = doc(db, "Noticias", newsId);
         const snap = await getDoc(ref);
@@ -102,25 +78,49 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
       setError("Las noticias publicadas no pueden ser editadas por reporteros");
       return;
     }
+
+    if (!form.titulo.trim() || !form.contenido.trim()) {
+      setError("El título y contenido son obligatorios");
+      return;
+    }
+
     setLoading(true);
+    setUploadingImage(true);
+
     try {
+      let imageUrl = form.imagen;
+
+      if (selectedFile) {
+        const imageName = `noticia-${newsId}`;
+
+        const result = await uploadImage(selectedFile, imageName);
+        if (result.success) {
+          imageUrl = result.url;
+        } else {
+          throw new Error(result.error || "Error al subir la imagen");
+        }
+        setSelectedFile(null);
+      }
+
       await updateDoc(doc(db, "Noticias", newsId), {
-        titulo: form.titulo || "",
-        subtitulo: form.subtitulo || "",
-        contenido: form.contenido || "",
+        titulo: form.titulo.trim(),
+        subtitulo: form.subtitulo.trim(),
+        contenido: form.contenido.trim(),
         categoria: form.categoria || "",
-        imagen: form.imagen || "",
+        imagen: imageUrl || "",
         estado: estado,
         fechaActualizacion: serverTimestamp(),
       });
+
       setToastOk(true);
       timers.current.push(setTimeout(() => setClosing(true), 650));
       timers.current.push(setTimeout(() => onClose?.(true), 650 + 220));
     } catch (e) {
       console.error(e);
-      setError("Error guardando cambios");
+      setError("Error guardando cambios: " + (e.message || e));
     } finally {
       setLoading(false);
+      setUploadingImage(false);
     }
   };
 
@@ -130,6 +130,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
       timers.current = [];
       setToastOk(false);
       setClosing(false);
+      setSelectedFile(null);
     };
   }, [open]);
 
@@ -153,7 +154,11 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
             onClick={handleSave}
             disabled={loading}
           >
-            {loading ? "Guardando..." : "Guardar"}
+            {loading
+              ? uploadingImage
+                ? "Subiendo imagen..."
+                : "Guardando..."
+              : "Guardar"}
           </button>
         </>
       }
@@ -284,9 +289,13 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
               htmlFor="edit-image-file"
               className={`upload-button ${
                 role === "Reportero" && published ? "disabled" : ""
-              }`}
+              } ${selectedFile ? "file-selected" : ""}`}
             >
-              {uploadingImage ? "Subiendo..." : "Seleccionar imagen"}
+              {uploadingImage
+                ? "Subiendo..."
+                : selectedFile
+                ? `Nueva imagen: ${selectedFile.name}`
+                : "Seleccionar imagen"}
             </label>
             <input
               id="imagen"

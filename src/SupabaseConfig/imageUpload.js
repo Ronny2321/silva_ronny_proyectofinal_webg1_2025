@@ -1,8 +1,8 @@
 import { supabase, IMAGE_BUCKET } from "./supabaseConfig.js";
 
 /**
- * @param {File} file - Archivo de imagen a subir
- * @param {string} fileName - Nombre personalizado para el archivo (opcional)
+ * @param {File} file 
+ * @param {string} fileName 
  * @returns {Promise<{success: boolean, url?: string, error?: string}>}
  */
 export const uploadImage = async (file, fileName = null) => {
@@ -14,7 +14,7 @@ export const uploadImage = async (file, fileName = null) => {
       };
     }
 
-    const maxSize = 5 * 1024 * 1024; 
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return {
         success: false,
@@ -31,7 +31,7 @@ export const uploadImage = async (file, fileName = null) => {
       .from(IMAGE_BUCKET)
       .upload(finalFileName, file, {
         cacheControl: "3600",
-        upsert: false,
+        upsert: true, // Permite reemplazar archivos existentes
       });
 
     if (error) {
