@@ -25,7 +25,7 @@ const Nav = ({ user, role }) => {
     .toUpperCase();
 
   return (
-    <header className="news-nav sticky top-0 z-50 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+    <header className="news-nav fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
       <div className="nav-container container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="brand">
           <Link to="/home" className="brand-link" aria-label="Ir al inicio">
@@ -42,10 +42,10 @@ const Nav = ({ user, role }) => {
             className={`menu-link ${isActive("/home") ? "active" : ""}`}
             to="/home"
           >
-            Inicio
+            Noticias
           </Link>
           <Link className={`menu-link ${isActive("/") ? "active" : ""}`} to="/">
-            Noticias
+            Mis Noticias
           </Link>
         </nav>
 
@@ -115,14 +115,14 @@ const Nav = ({ user, role }) => {
                 to="/home"
                 onClick={() => setOpen(false)}
               >
-                Inicio
+                Noticias
               </Link>
               <Link
                 className="mobile-link"
                 to="/"
                 onClick={() => setOpen(false)}
               >
-                Noticias
+                Mis Noticias
               </Link>
               <hr className="mobile-sep" />
               {user ? (

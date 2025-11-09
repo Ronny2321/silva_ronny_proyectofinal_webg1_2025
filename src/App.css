@@ -9,3 +9,7 @@ body {
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
+
+body {
+  padding-top: 64px;
+}
