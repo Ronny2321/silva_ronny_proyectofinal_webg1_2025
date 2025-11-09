@@ -1,8 +1,8 @@
 import { supabase, IMAGE_BUCKET } from "./supabaseConfig.js";
 
 /**
- * @param {File} file 
- * @param {string} fileName 
+ * @param {File} file
+ * @param {string} fileName
  * @returns {Promise<{success: boolean, url?: string, error?: string}>}
  */
 export const uploadImage = async (file, fileName = null) => {
@@ -31,7 +31,7 @@ export const uploadImage = async (file, fileName = null) => {
       .from(IMAGE_BUCKET)
       .upload(finalFileName, file, {
         cacheControl: "3600",
-        upsert: true, // Permite reemplazar archivos existentes
+        upsert: true,
       });
 
     if (error) {
@@ -58,9 +58,11 @@ export const uploadImage = async (file, fileName = null) => {
       .from(IMAGE_BUCKET)
       .getPublicUrl(data.path);
 
+    const cacheBustingUrl = `${urlData.publicUrl}?t=${timestamp}`;
+
     return {
       success: true,
-      url: urlData.publicUrl,
+      url: cacheBustingUrl,
       path: data.path,
     };
   } catch (error) {

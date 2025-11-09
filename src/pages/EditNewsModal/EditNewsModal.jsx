@@ -96,6 +96,8 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         const result = await uploadImage(selectedFile, imageName);
         if (result.success) {
           imageUrl = result.url;
+          // Actualizar inmediatamente el estado del formulario con la nueva URL
+          setForm(prev => ({ ...prev, imagen: imageUrl }));
         } else {
           throw new Error(result.error || "Error al subir la imagen");
         }
