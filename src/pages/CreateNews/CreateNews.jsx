@@ -119,7 +119,7 @@ const CreateNews = ({ role: roleProp }) => {
 
             setNotice({
               open: true,
-              title: "Noticia creada con imagen",
+              title: "Noticia creada correctamente",
               text: `Se creó "${
                 noticia.titulo || "Nueva noticia"
               }" con imagen correctamente.`,
@@ -127,7 +127,7 @@ const CreateNews = ({ role: roleProp }) => {
           } else {
             setNotice({
               open: true,
-              title: "Noticia creada (sin imagen)",
+              title: "Noticia creada correctamente (error en imagen)",
               text: `Se creó "${
                 noticia.titulo || "Nueva noticia"
               }" pero falló la subida de imagen: ${
