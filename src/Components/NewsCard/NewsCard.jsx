@@ -3,7 +3,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { cardAnimations, getAnimationVariant } from "../../utils/animations";
-import LazyImage from "../LazyImage/LazyImage.jsx";
+import LazyImage from "../Animations/LazyImage/LazyImage.jsx";
 import "./NewsCard.css";
 
 const NewsCard = ({ news }) => {

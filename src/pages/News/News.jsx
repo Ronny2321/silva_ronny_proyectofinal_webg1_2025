@@ -16,7 +16,7 @@ import useCategoriesCollection from "../../hooks/getCategorias.js";
 import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
 import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
 import Modal from "../../Components/Modal/Modal.jsx";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
 import "./News.css";
 

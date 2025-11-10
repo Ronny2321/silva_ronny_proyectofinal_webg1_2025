@@ -8,7 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
 import { formAnimations, getAnimationVariant } from "../../utils/animations.js";
 import "./Register.css";

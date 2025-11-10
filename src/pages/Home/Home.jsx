@@ -8,12 +8,12 @@ import {
   getAnimationVariant,
 } from "../../utils/animations";
 import { Link } from "react-router-dom";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import "./Home.css";
 import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
-import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import LazyImage from "../../Components/Animations/LazyImage/LazyImage.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
 
 const Home = () => {

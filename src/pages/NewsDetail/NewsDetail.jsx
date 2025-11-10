@@ -12,8 +12,8 @@ import {
   limit,
 } from "firebase/firestore";
 import "./NewsDetail.css";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
-import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import LazyImage from "../../Components/Animations/LazyImage/LazyImage.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
 import {
   newsDetailAnimations,

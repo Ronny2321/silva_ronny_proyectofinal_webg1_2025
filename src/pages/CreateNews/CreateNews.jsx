@@ -9,9 +9,9 @@ import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
 import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./CreateNews.css";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
-import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import LazyImage from "../../Components/Animations/LazyImage/LazyImage.jsx";
 
 const CreateNews = ({ role: roleProp }) => {
   const [noticia, setNoticia] = useState({});

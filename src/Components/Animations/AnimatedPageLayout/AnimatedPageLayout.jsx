@@ -1,7 +1,7 @@
 import React from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { pageSectionTop, getAnimationVariant } from "../../utils/animations";
+import { pageSectionTop, getAnimationVariant } from "../../../utils/animations";
 
 const AnimatedPageLayout = ({ children, className = "" }) => {
   return (

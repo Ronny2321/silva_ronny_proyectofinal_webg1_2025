@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { getAnimationVariant } from "../../utils/animations";
+import { getAnimationVariant } from "../../../utils/animations";
 
 const rawVariants = {
   loading: { opacity: 0, scale: 1.02 },

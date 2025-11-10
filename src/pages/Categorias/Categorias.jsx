@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { useCategoriesDocs } from "../../hooks/getCategorias.js";
 import "./Categorias.css";
-import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import AnimatedPageLayout from "../../Components/Animations/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import Loader from "../../Components/Loader/Loader.jsx";
 
 export default function Categorias() {
