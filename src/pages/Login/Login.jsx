@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 import { formAnimations, getAnimationVariant } from "../../utils/animations.js";
 import "./Login.css";
 
@@ -63,6 +64,7 @@ const Login = () => {
           <p className="sub">Accede a tu cuenta para gestionar tus noticias.</p>
         </div>
 
+        {loading && <Loader fullscreen message="Iniciando sesión…" />}
         <Motion.form
           className="form"
           onSubmit={onSubmit}

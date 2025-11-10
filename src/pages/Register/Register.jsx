@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 import { formAnimations, getAnimationVariant } from "../../utils/animations.js";
 import "./Register.css";
 
@@ -111,6 +112,7 @@ const Register = () => {
           </div>
         )}
 
+        {loading && <Loader fullscreen message="Creando cuenta…" />}
         <Motion.form
           className="form"
           onSubmit={onSubmit}

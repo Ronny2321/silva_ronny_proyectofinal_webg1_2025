@@ -10,6 +10,8 @@ import useCategoriesCollection from "../../hooks/getCategorias.js";
 import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./CreateNews.css";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
+import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
 
 const CreateNews = ({ role: roleProp }) => {
   const [noticia, setNoticia] = useState({});
@@ -418,6 +420,18 @@ const CreateNews = ({ role: roleProp }) => {
           </aside>
         </div>
       </AnimatedPageLayout>
+      {(saving || uploadingImage) && (
+        <Loader
+          fullscreen
+          message={
+            saving
+              ? uploadingImage
+                ? "Subiendo imagen…"
+                : "Guardando noticia…"
+              : "Procesando…"
+          }
+        />
+      )}
       {notice.open && (
         <div
           className="modal-backdrop"

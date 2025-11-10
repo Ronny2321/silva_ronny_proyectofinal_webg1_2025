@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signOut } from "firebase/auth";
 import { navAnimations, getAnimationVariant } from "../../utils/animations";
+import Loader from "../Loader/Loader.jsx";
 import "./Nav.css";
 
 const Nav = ({ user, role }) => {
@@ -22,6 +23,7 @@ const Nav = ({ user, role }) => {
   }, [open]);
 
   const isActive = (to) => pathname === to;
+  const [loggingOut, setLoggingOut] = React.useState(false);
   const initial = (user?.displayName || user?.email || "?")
     .trim()
     .charAt(0)
@@ -116,7 +118,14 @@ const Nav = ({ user, role }) => {
                 </motion.div>
                 <motion.button
                   className="btn-outline"
-                  onClick={() => signOut(auth)}
+                  onClick={async () => {
+                    try {
+                      setLoggingOut(true);
+                      await signOut(auth);
+                    } finally {
+                      setLoggingOut(false);
+                    }
+                  }}
                   variants={getAnimationVariant(navAnimations.button)}
                   whileHover="hover"
                   whileTap="tap"
@@ -224,9 +233,14 @@ const Nav = ({ user, role }) => {
                       )}
                       <motion.button
                         className="mobile-logout"
-                        onClick={() => {
+                        onClick={async () => {
                           setOpen(false);
-                          signOut(auth);
+                          try {
+                            setLoggingOut(true);
+                            await signOut(auth);
+                          } finally {
+                            setLoggingOut(false);
+                          }
                         }}
                         variants={navAnimations.menuItem}
                       >
@@ -251,6 +265,7 @@ const Nav = ({ user, role }) => {
         </AnimatePresence>,
         document.body
       )}
+      {loggingOut && <Loader fullscreen message="Cerrando sesión…" />}
     </header>
   );
 };

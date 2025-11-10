@@ -5,6 +5,7 @@ import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
 import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./EditNewsModal.css";
+import Loader from "../../Components/Loader/Loader.jsx";
 
 const EditNewsModal = ({ open, onClose, newsId, role }) => {
   const editorTransitions = useMemo(
@@ -97,7 +98,7 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
         if (result.success) {
           imageUrl = result.url;
           // Actualizar inmediatamente el estado del formulario con la nueva URL
-          setForm(prev => ({ ...prev, imagen: imageUrl }));
+          setForm((prev) => ({ ...prev, imagen: imageUrl }));
         } else {
           throw new Error(result.error || "Error al subir la imagen");
         }
@@ -339,6 +340,12 @@ const EditNewsModal = ({ open, onClose, newsId, role }) => {
           </div>
           Cambios guardados
         </div>
+      )}
+      {loading && (
+        <Loader
+          fullscreen
+          message={uploadingImage ? "Subiendo imagen…" : "Guardando cambios…"}
+        />
       )}
     </Modal>
   );
