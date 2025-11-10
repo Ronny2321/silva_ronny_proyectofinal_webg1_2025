@@ -80,15 +80,29 @@ export default function NewsDetail() {
     };
   }, [id]);
 
-  if (loading)
-    return <Loader fullscreen message="Cargando noticia…" />;
+  if (loading) return <Loader fullscreen message="Cargando noticia…" />;
   if (error)
     return (
-      <div className="detail-shell">
+      <div className="detail-shell container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="error">{error}</div>
+        <div>
+          <Link to="/home" className="back-link" aria-label="Volver al inicio">
+            Volver al inicio
+          </Link>
+        </div>
       </div>
     );
-  if (!item) return null;
+  if (!item)
+    return (
+      <div className="detail-shell container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="error">Noticia no disponible</div>
+        <div>
+          <Link to="/home" className="back-link" aria-label="Volver al inicio">
+            Volver al inicio
+          </Link>
+        </div>
+      </div>
+    );
 
   const fecha = item.fechaPublicacion || item.fecha || item.fechaCreacion;
   const fechaStr = (() => {
