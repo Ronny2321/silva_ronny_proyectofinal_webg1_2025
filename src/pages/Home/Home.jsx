@@ -1,9 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import {
+  heroAnimations,
+  cardAnimations,
+  staggerContainer,
+  getAnimationVariant,
+} from "../../utils/animations";
 import { Link } from "react-router-dom";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import db from "../../FirebaseConfig/FirebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import "./Home.css";
 import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
+import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
 
 const Home = () => {
   const [items, setItems] = useState([]);
@@ -88,9 +98,14 @@ const Home = () => {
     return <p style={{ padding: 16 }}>No hay noticias publicadas.</p>;
 
   return (
-    <div className="home-shell container mx-auto px-4 sm:px-6 lg:px-8">
+    <AnimatedPageLayout className="home-shell container mx-auto px-4 sm:px-6 lg:px-8">
       {slides.length > 0 && (
-        <>
+        <motion.section
+          className="home-hero"
+          variants={getAnimationVariant(heroAnimations.section)}
+          initial="initial"
+          animate="animate"
+        >
           <div className="section-head">
             <h2 className="section-title">Noticias destacadas</h2>
           </div>
@@ -103,10 +118,11 @@ const Home = () => {
                 {slides.map((s) => (
                   <Link key={s.id} className="slide" to={`/noticia/${s.id}`}>
                     {s.imagen ? (
-                      <img
+                      <LazyImage
                         src={s.imagen}
                         alt={s.titulo || "Noticia destacada"}
-                        loading="lazy"
+                        className="featured-img"
+                        threshold={0.1}
                       />
                     ) : (
                       <div className="featured-ph" aria-hidden />
@@ -153,7 +169,12 @@ const Home = () => {
                         className={"aside-thumb" + (n.imagen ? "" : " blank")}
                       >
                         {n.imagen && (
-                          <img src={n.imagen} alt="" loading="lazy" />
+                          <LazyImage
+                            src={n.imagen}
+                            alt=""
+                            className="aside-thumb-img"
+                            threshold={0.2}
+                          />
                         )}
                       </div>
                       <div className="aside-info">
@@ -173,7 +194,7 @@ const Home = () => {
               </ul>
             </aside>
           </div>
-        </>
+        </motion.section>
       )}
 
       <section className="home-section py-4 sm:py-6 md:py-10">
@@ -199,21 +220,33 @@ const Home = () => {
             ))}
           </div>
         </div>
-        <div className="home-grid-cards">
+        <motion.div
+          className="home-grid-cards"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
           {baseGrid
             .filter((n) => homeCat === "Todas" || n.categoria === homeCat)
             .slice(0, 9)
             .map((n) => (
-              <div key={n.id} className="card-wrap">
+              <motion.article
+                key={n.id}
+                className="card-wrap"
+                variants={cardAnimations}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true, amount: 0.2 }}
+              >
                 <NewsCard news={n} />
-              </div>
+              </motion.article>
             ))}
           {baseGrid.filter(
             (n) => homeCat === "Todas" || n.categoria === homeCat
           ).length === 0 && <p className="aside-empty">Sin datos</p>}
-        </div>
+        </motion.div>
       </section>
-    </div>
+    </AnimatedPageLayout>
   );
 };
 

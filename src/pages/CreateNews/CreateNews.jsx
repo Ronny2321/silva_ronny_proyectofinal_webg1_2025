@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import { formAnimations, getAnimationVariant } from "../../utils/animations";
 import { useNavigate } from "react-router-dom";
 import db, { auth } from "../../FirebaseConfig/FirebaseConfig.js";
 import { onAuthStateChanged } from "firebase/auth";
@@ -6,6 +9,7 @@ import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import useCategoriesCollection from "../../hooks/getCategorias.js";
 import { uploadImage } from "../../SupabaseConfig/imageUpload.js";
 import "./CreateNews.css";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
 
 const CreateNews = ({ role: roleProp }) => {
   const [noticia, setNoticia] = useState({});
@@ -180,7 +184,7 @@ const CreateNews = ({ role: roleProp }) => {
 
   return (
     <>
-      <div className="create-page">
+      <AnimatedPageLayout className="create-page">
         <div className="back-bar">
           <button
             type="button"
@@ -196,7 +200,16 @@ const CreateNews = ({ role: roleProp }) => {
           Completa los campos y visualiza una vista previa en tiempo real.
         </p>
         <div className="create-grid appear">
-          <section className="panel">
+          <motion.form
+            className="panel"
+            variants={getAnimationVariant(formAnimations)}
+            initial="initial"
+            animate="animate"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
             <div className="group">
               <label className="label" htmlFor="titulo">
                 Título
@@ -366,9 +379,12 @@ const CreateNews = ({ role: roleProp }) => {
             </div>
 
             <div className="sticky-actions">
-              <button
+              <motion.button
+                type="submit"
                 className="btn-primary btn-lg"
-                onClick={handleSave}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                 disabled={saving || uploadingImage}
               >
                 {saving
@@ -376,16 +392,17 @@ const CreateNews = ({ role: roleProp }) => {
                     ? "Subiendo imagen..."
                     : "Guardando noticia..."
                   : "Publicar"}
-              </button>
+              </motion.button>
             </div>
-          </section>
+          </motion.form>
 
           <aside className="panel preview" aria-label="Vista previa">
             {noticia.imagen ? (
-              <img
+              <LazyImage
                 className="preview-image"
                 src={noticia.imagen}
                 alt="Vista previa"
+                threshold={0}
               />
             ) : (
               <div className="preview-image" aria-hidden />
@@ -400,7 +417,7 @@ const CreateNews = ({ role: roleProp }) => {
             </div>
           </aside>
         </div>
-      </div>
+      </AnimatedPageLayout>
       {notice.open && (
         <div
           className="modal-backdrop"

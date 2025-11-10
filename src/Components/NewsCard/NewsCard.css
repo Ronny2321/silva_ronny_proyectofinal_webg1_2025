@@ -15,12 +15,13 @@
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     color: var(--ink);
     text-decoration: none;
-    transition: transform 180ms ease, box-shadow 180ms ease;
+    transition: transform 200ms ease-in-out, box-shadow 200ms ease-in-out;
 }
 
 .news-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.10);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.10),
+        0 8px 10px -6px rgba(0, 0, 0, 0.10);
 }
 
 .card-figure {

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { motion as Motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import { formAnimations, getAnimationVariant } from "../../utils/animations.js";
 import "./Login.css";
 
 const translate = (code) => {
@@ -51,7 +54,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-screen">
+    <AnimatedPageLayout className="login-screen">
       <div className="bg-texture" aria-hidden />
       <section className="login-card appear">
         <div className="card-header">
@@ -60,7 +63,15 @@ const Login = () => {
           <p className="sub">Accede a tu cuenta para gestionar tus noticias.</p>
         </div>
 
-        <form className="form" onSubmit={onSubmit} noValidate>
+        <Motion.form
+          className="form"
+          onSubmit={onSubmit}
+          noValidate
+          variants={getAnimationVariant(formAnimations)}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
           <label className="field">
             <span className="icon">
               <svg
@@ -145,13 +156,13 @@ const Login = () => {
               <span className="btn-content">Entrar</span>
             )}
           </button>
-        </form>
+        </Motion.form>
 
         <p className="hint">
           ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
         </p>
       </section>
-    </div>
+    </AnimatedPageLayout>
   );
 };
 

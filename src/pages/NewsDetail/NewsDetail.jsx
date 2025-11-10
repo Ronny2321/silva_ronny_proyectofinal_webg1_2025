@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion as Motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import db from "../../FirebaseConfig/FirebaseConfig";
 import {
@@ -11,6 +12,12 @@ import {
   limit,
 } from "firebase/firestore";
 import "./NewsDetail.css";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import {
+  newsDetailAnimations,
+  getAnimationVariant,
+} from "../../utils/animations.js";
 
 export default function NewsDetail() {
   const { id } = useParams();
@@ -116,9 +123,16 @@ export default function NewsDetail() {
   };
 
   return (
-    <div className="detail-shell container mx-auto px-4 sm:px-6 lg:px-8">
+    <AnimatedPageLayout className="detail-shell container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="detail-grid">
-        <article className="article">
+        <Motion.article
+          key={id}
+          className="article"
+          variants={getAnimationVariant(newsDetailAnimations)}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
           <div className="back-share">
             <Link to="/home" className="back-link" aria-label="Volver">
               Volver
@@ -196,10 +210,11 @@ export default function NewsDetail() {
           )}
 
           {item.imagen ? (
-            <img
+            <LazyImage
               className="hero w-full h-auto rounded-xl aspect-video object-cover"
               src={item.imagen}
               alt={item.titulo}
+              threshold={0.05}
             />
           ) : (
             <div
@@ -235,7 +250,7 @@ export default function NewsDetail() {
           )}
 
           <div className="article-body">{item.contenido}</div>
-        </article>
+        </Motion.article>
 
         <aside className="aside">
           <h3 className="aside-title">Más leídas</h3>
@@ -259,6 +274,6 @@ export default function NewsDetail() {
           </ul>
         </aside>
       </div>
-    </div>
+    </AnimatedPageLayout>
   );
 }

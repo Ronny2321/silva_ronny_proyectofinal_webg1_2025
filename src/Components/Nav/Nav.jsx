@@ -1,8 +1,11 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "../../FirebaseConfig/FirebaseConfig";
 import { signOut } from "firebase/auth";
+import { navAnimations, getAnimationVariant } from "../../utils/animations";
 import "./Nav.css";
 
 const Nav = ({ user, role }) => {
@@ -38,15 +41,30 @@ const Nav = ({ user, role }) => {
           className="menu menu-desktop hidden md:flex gap-6"
           aria-label="Secciones"
         >
-          <Link
-            className={`menu-link ${isActive("/home") ? "active" : ""}`}
-            to="/home"
+          <motion.div
+            variants={getAnimationVariant(navAnimations.desktopLink)}
+            whileHover="hover"
+            whileTap="tap"
           >
-            Noticias
-          </Link>
-          <Link className={`menu-link ${isActive("/") ? "active" : ""}`} to="/">
-            Mis Noticias
-          </Link>
+            <Link
+              className={`menu-link ${isActive("/home") ? "active" : ""}`}
+              to="/home"
+            >
+              Noticias
+            </Link>
+          </motion.div>
+          <motion.div
+            variants={getAnimationVariant(navAnimations.desktopLink)}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <Link
+              className={`menu-link ${isActive("/") ? "active" : ""}`}
+              to="/"
+            >
+              Mis Noticias
+            </Link>
+          </motion.div>
         </nav>
 
         <div className="actions flex items-center gap-3">
@@ -67,26 +85,56 @@ const Nav = ({ user, role }) => {
               <div className="user-area">
                 {role === "Reportero" && (
                   <div className="reporter-links">
-                    <Link className="small-link" to="/crear">
-                      Crear noticia
-                    </Link>
-                    <Link className="small-link" to="/categorias">
-                      Categorías
-                    </Link>
+                    <motion.div
+                      variants={getAnimationVariant(navAnimations.button)}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      <Link className="small-link" to="/crear">
+                        Crear noticia
+                      </Link>
+                    </motion.div>
+                    <motion.div
+                      variants={getAnimationVariant(navAnimations.button)}
+                      whileHover="hover"
+                      whileTap="tap"
+                    >
+                      <Link className="small-link" to="/categorias">
+                        Categorías
+                      </Link>
+                    </motion.div>
                   </div>
                 )}
-                <div className="avatar" title={user?.email || "Usuario"}>
+                <motion.div
+                  className="avatar"
+                  title={user?.email || "Usuario"}
+                  variants={getAnimationVariant(navAnimations.avatar)}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
                   {initial}
-                </div>
-                <button className="btn-outline" onClick={() => signOut(auth)}>
+                </motion.div>
+                <motion.button
+                  className="btn-outline"
+                  onClick={() => signOut(auth)}
+                  variants={getAnimationVariant(navAnimations.button)}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
                   Cerrar sesión
-                </button>
+                </motion.button>
               </div>
             ) : (
               <div className="guest-area">
-                <Link className="btn-primary" to="/login">
-                  Iniciar sesión
-                </Link>
+                <motion.div
+                  variants={getAnimationVariant(navAnimations.button)}
+                  whileHover="hover"
+                  whileTap="tap"
+                >
+                  <Link className="btn-primary" to="/login">
+                    Iniciar sesión
+                  </Link>
+                </motion.div>
               </div>
             )}
           </div>
@@ -94,80 +142,113 @@ const Nav = ({ user, role }) => {
       </div>
 
       {createPortal(
-        <>
-          <div
-            className={`mobile-overlay ${open ? "show" : ""}`}
-            onClick={() => setOpen(false)}
-          />
-          <aside
-            id="mobile-menu"
-            className={`mobile-panel ${open ? "show" : ""}`}
-            aria-hidden={!open}
-            role="dialog"
-            aria-modal={open}
-          >
-            <nav
-              className="mobile-menu flex flex-col space-y-4 p-4 text-lg font-semibold"
-              aria-label="Menú móvil"
-            >
-              <Link
-                className="mobile-link"
-                to="/home"
+        <AnimatePresence>
+          {open && (
+            <>
+              <motion.div
+                className="mobile-overlay"
                 onClick={() => setOpen(false)}
+                variants={getAnimationVariant(navAnimations.mobileOverlay)}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              />
+              <motion.aside
+                id="mobile-menu"
+                className="mobile-panel"
+                aria-hidden={!open}
+                role="dialog"
+                aria-modal={open}
+                variants={getAnimationVariant(navAnimations.mobileMenu)}
+                initial="initial"
+                animate="animate"
+                exit="exit"
               >
-                Noticias
-              </Link>
-              <Link
-                className="mobile-link"
-                to="/"
-                onClick={() => setOpen(false)}
-              >
-                Mis Noticias
-              </Link>
-              <hr className="mobile-sep" />
-              {user ? (
-                <>
-                  {role === "Reportero" && (
-                    <>
-                      <Link
-                        className="mobile-link"
-                        to="/crear"
-                        onClick={() => setOpen(false)}
-                      >
-                        Crear
-                      </Link>
-                      <Link
-                        className="mobile-link"
-                        to="/categorias"
-                        onClick={() => setOpen(false)}
-                      >
-                        Categorías
-                      </Link>
-                      <hr className="mobile-sep" />
-                    </>
-                  )}
-                  <button
-                    className="mobile-logout"
-                    onClick={() => {
-                      setOpen(false);
-                      signOut(auth);
-                    }}
-                  >
-                    Cerrar sesión
-                  </button>
-                </>
-              ) : (
-                <Link
-                  className="mobile-login"
-                  to="/login"
-                  onClick={() => setOpen(false)}
+                <motion.nav
+                  className="mobile-menu flex flex-col space-y-4 p-4 text-lg font-semibold"
+                  aria-label="Menú móvil"
+                  variants={navAnimations.menuStagger}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
                 >
-                  Iniciar sesión
-                </Link>
-              )}
-            </nav>
-          </aside>
-        </>,
+                  <motion.div variants={navAnimations.menuItem}>
+                    <Link
+                      className="mobile-link"
+                      to="/home"
+                      onClick={() => setOpen(false)}
+                    >
+                      Noticias
+                    </Link>
+                  </motion.div>
+                  <motion.div variants={navAnimations.menuItem}>
+                    <Link
+                      className="mobile-link"
+                      to="/"
+                      onClick={() => setOpen(false)}
+                    >
+                      Mis Noticias
+                    </Link>
+                  </motion.div>
+                  <motion.hr
+                    className="mobile-sep"
+                    variants={navAnimations.menuItem}
+                  />
+                  {user ? (
+                    <>
+                      {role === "Reportero" && (
+                        <>
+                          <motion.div variants={navAnimations.menuItem}>
+                            <Link
+                              className="mobile-link"
+                              to="/crear"
+                              onClick={() => setOpen(false)}
+                            >
+                              Crear
+                            </Link>
+                          </motion.div>
+                          <motion.div variants={navAnimations.menuItem}>
+                            <Link
+                              className="mobile-link"
+                              to="/categorias"
+                              onClick={() => setOpen(false)}
+                            >
+                              Categorías
+                            </Link>
+                          </motion.div>
+                          <motion.hr
+                            className="mobile-sep"
+                            variants={navAnimations.menuItem}
+                          />
+                        </>
+                      )}
+                      <motion.button
+                        className="mobile-logout"
+                        onClick={() => {
+                          setOpen(false);
+                          signOut(auth);
+                        }}
+                        variants={navAnimations.menuItem}
+                      >
+                        Cerrar sesión
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.div variants={navAnimations.menuItem}>
+                      <Link
+                        className="mobile-login"
+                        to="/login"
+                        onClick={() => setOpen(false)}
+                      >
+                        Iniciar sesión
+                      </Link>
+                    </motion.div>
+                  )}
+                </motion.nav>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>,
         document.body
       )}
     </header>

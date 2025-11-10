@@ -16,7 +16,6 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
-    animation: fadeIn 160ms ease-out both;
 }
 
 .modal-container {
@@ -34,7 +33,6 @@
     border-radius: 16px;
     box-shadow: 0 24px 80px rgba(15, 23, 42, 0.2);
     padding: 24px;
-    animation: popIn 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -139,13 +137,4 @@
         opacity: 1;
         transform: scale(1);
     }
-}
-
-/* Animación de salida cuando el root tiene la clase 'closing' */
-.modal-root.closing .modal-overlay { animation: fadeOut 140ms ease-in both; }
-.modal-root.closing .modal-panel { animation: popIn 180ms cubic-bezier(0.2, 0.8, 0.2, 1) reverse both; }
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
 }

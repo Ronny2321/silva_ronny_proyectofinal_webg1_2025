@@ -1,4 +1,11 @@
 import React, { useMemo, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import {
+  categoryAnimations,
+  staggerContainer,
+  getAnimationVariant,
+} from "../../utils/animations";
 import db from "../../FirebaseConfig/FirebaseConfig.js";
 import {
   collection,
@@ -9,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { useCategoriesDocs } from "../../hooks/getCategorias.js";
 import "./Categorias.css";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
 
 export default function Categorias() {
   const { docs, loading } = useCategoriesDocs();
@@ -99,7 +107,7 @@ export default function Categorias() {
   };
 
   return (
-    <div className="page-categorias">
+    <AnimatedPageLayout className="page-categorias">
       <section
         className="cat-card appear"
         role="region"
@@ -190,9 +198,19 @@ export default function Categorias() {
                 </div>
               </div>
             </div>
-            <div role="rowgroup">
+            <motion.div
+              role="rowgroup"
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
+            >
               {docs.map((it) => (
-                <div key={it.id} role="row" className="row">
+                <motion.div
+                  key={it.id}
+                  role="row"
+                  className="row"
+                  variants={getAnimationVariant(categoryAnimations.item)}
+                >
                   {editingId === it.id ? (
                     <div
                       className="edit-row"
@@ -283,9 +301,9 @@ export default function Categorias() {
                       </div>
                     </>
                   )}
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         )}
       </section>
@@ -354,6 +372,6 @@ export default function Categorias() {
           </div>
         </div>
       )}
-    </div>
+    </AnimatedPageLayout>
   );
 }

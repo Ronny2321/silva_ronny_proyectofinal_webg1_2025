@@ -16,6 +16,7 @@ import useCategoriesCollection from "../../hooks/getCategorias.js";
 import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
 import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
 import Modal from "../../Components/Modal/Modal.jsx";
+import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import "./News.css";
 
 const News = ({ role }) => {
@@ -154,7 +155,7 @@ const News = ({ role }) => {
   };
 
   return (
-    <div className="news-page">
+    <AnimatedPageLayout className="news-page">
       <div className="news-top">
         <div className="search">
           <span className="icon" aria-hidden>
@@ -183,7 +184,7 @@ const News = ({ role }) => {
             }}
           />
         </div>
-  <div className="filters" role="group" aria-label="Filtros de noticias">
+        <div className="filters" role="group" aria-label="Filtros de noticias">
           <select
             className="select"
             value={statusFilter}
@@ -419,7 +420,7 @@ const News = ({ role }) => {
           </div>
         </div>
       </Modal>
-    </div>
+    </AnimatedPageLayout>
   );
 };
 

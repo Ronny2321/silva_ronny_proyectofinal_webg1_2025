@@ -1,5 +1,9 @@
 import * as React from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { cardAnimations, getAnimationVariant } from "../../utils/animations";
+import LazyImage from "../LazyImage/LazyImage.jsx";
 import "./NewsCard.css";
 
 const NewsCard = ({ news }) => {
@@ -38,42 +42,47 @@ const NewsCard = ({ news }) => {
   })();
 
   return (
-    <Link
-      to={`/noticia/${news.id}`}
-      className="news-card flex flex-col rounded-xl overflow-hidden transition-transform duration-200 ease-in-out hover:scale-[1.01]"
+    <motion.div
+      className="news-card flex flex-col rounded-xl overflow-hidden"
+      variants={getAnimationVariant(cardAnimations)}
+      initial="initial"
+      whileInView="animate"
+      whileHover="hover"
+      whileTap="tap"
+      viewport={{ once: true, amount: 0.2 }}
       aria-label={news.titulo || "Noticia"}
     >
-      <div className="card-figure w-full aspect-video bg-slate-200">
-        {imgSrc ? (
-          <img
-            className="card-img"
-            src={imgSrc}
-            alt={news.titulo || "Imagen de noticia"}
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        ) : (
-          <div className="card-img placeholder" aria-hidden />
-        )}
-        {news.categoria && <span className="badge">{news.categoria}</span>}
-      </div>
-      <div className="card-content p-3 grid gap-1">
-        <h3 className="title text-base sm:text-lg md:text-xl font-serif">
-          {news.titulo || "Sin título"}
-        </h3>
-        {news.subtitulo && (
-          <p className="subtitle text-sm sm:text-base">{news.subtitulo}</p>
-        )}
-        <div className="meta">
-          {dateStr && <span>{dateStr}</span>}
-          {news.autor && <span>• {news.autor}</span>}
-          {estado && (
-            <span className={`status-badge ${estadoClass}`}>{estado}</span>
+      <Link to={`/noticia/${news.id}`}>
+        <div className="card-figure w-full aspect-video bg-slate-200">
+          {imgSrc ? (
+            <LazyImage
+              src={imgSrc}
+              alt={news.titulo || "Imagen de noticia"}
+              className="card-img"
+              threshold={0.15}
+            />
+          ) : (
+            <div className="card-img placeholder" aria-hidden />
           )}
+          {news.categoria && <span className="badge">{news.categoria}</span>}
         </div>
-      </div>
-    </Link>
+        <div className="card-content p-3 grid gap-1">
+          <h3 className="title text-base sm:text-lg md:text-xl font-serif">
+            {news.titulo || "Sin título"}
+          </h3>
+          {news.subtitulo && (
+            <p className="subtitle text-sm sm:text-base">{news.subtitulo}</p>
+          )}
+          <div className="meta">
+            {dateStr && <span>{dateStr}</span>}
+            {news.autor && <span>• {news.autor}</span>}
+            {estado && (
+              <span className={`status-badge ${estadoClass}`}>{estado}</span>
+            )}
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   );
 };
 

@@ -48,3 +48,51 @@
     padding: 0 12px;
     background: #fff;
 }
+
+.fields-grid {
+    display: grid;
+    gap: 12px 16px;
+    margin-bottom: 4px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 640px) {
+    .fields-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.hint-inline {
+    min-height: 18px;
+}
+
+.select {
+    width: 100%;
+}
+
+
+@media (min-width: 640px) {
+    .register-screen .login-card {
+        max-width: 640px;
+    }
+}
+
+@media (min-width: 768px) {
+    .register-screen .login-card {
+        max-width: 700px;
+    }
+
+    .fields-grid {
+        column-gap: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .register-screen .login-card {
+        max-width: 760px;
+    }
+}

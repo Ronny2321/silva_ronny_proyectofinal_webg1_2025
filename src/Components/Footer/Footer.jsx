@@ -1,16 +1,24 @@
 import "./Footer.css";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import { footerAnimations, getAnimationVariant } from "../../utils/animations";
 
 const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer
+    <motion.footer
       className="site-footer bg-slate-900 text-slate-300 dark:bg-black dark:text-slate-400"
       role="contentinfo"
+      variants={getAnimationVariant(footerAnimations)}
+      initial="initial"
+      animate="animate"
     >
       <div className="footer-inner container mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center place-items-center">
         <div className="col about">
-          <h4 className="ft-title font-bold text-lg mb-3">Sobre Noticias UDLA</h4>
+          <h4 className="ft-title font-bold text-lg mb-3">
+            Sobre Noticias UDLA
+          </h4>
           <p className="ft-about text-slate-400">
             Noticias UDLA ofrece cobertura ágil y confiable de la actualidad en
             todo el mundo.
@@ -106,7 +114,7 @@ const Footer = () => {
           © {year} Noticias UDLA — Todos los derechos reservados
         </p>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 
