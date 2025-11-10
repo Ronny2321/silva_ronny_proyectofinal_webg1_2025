@@ -14,6 +14,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import "./Home.css";
 import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
 import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 
 const Home = () => {
   const [items, setItems] = useState([]);
@@ -93,7 +94,7 @@ const Home = () => {
   }, [sorted]);
   const [homeCat, setHomeCat] = useState("Todas");
 
-  if (loading) return <p style={{ padding: 16 }}>Cargando noticias…</p>;
+  if (loading) return <Loader fullscreen message="Cargando noticias…" />;
   if (!items.length)
     return <p style={{ padding: 16 }}>No hay noticias publicadas.</p>;
 

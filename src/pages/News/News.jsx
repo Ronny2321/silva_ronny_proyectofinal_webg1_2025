@@ -17,6 +17,7 @@ import NewsCard from "../../Components/NewsCard/NewsCard.jsx";
 import EditNewsModal from "../EditNewsModal/EditNewsModal.jsx";
 import Modal from "../../Components/Modal/Modal.jsx";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 import "./News.css";
 
 const News = ({ role }) => {
@@ -154,6 +155,8 @@ const News = ({ role }) => {
     setPage(1);
   };
 
+  const isLoading = !uid && news.length === 0; 
+
   return (
     <AnimatedPageLayout className="news-page">
       <div className="news-top">
@@ -281,6 +284,7 @@ const News = ({ role }) => {
 
       <div ref={listTopRef} className="scroll-anchor" />
       <div className="cards">
+        {isLoading && <Loader message="Cargando noticias…" />}
         {paginated.map((n) => (
           <div className="card-wrap" key={n.id}>
             <NewsCard news={n} />
@@ -352,7 +356,9 @@ const News = ({ role }) => {
             </div>
           </div>
         ))}
-        {paginated.length === 0 && <div className="empty">Sin resultados</div>}
+        {!isLoading && paginated.length === 0 && (
+          <div className="empty">Sin resultados</div>
+        )}
       </div>
 
       <div className="pager">

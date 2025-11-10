@@ -17,6 +17,7 @@ import {
 import { useCategoriesDocs } from "../../hooks/getCategorias.js";
 import "./Categorias.css";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 
 export default function Categorias() {
   const { docs, loading } = useCategoriesDocs();
@@ -167,7 +168,7 @@ export default function Categorias() {
         </div>
 
         {loading ? (
-          <p className="cat-sub">Cargando…</p>
+          <Loader message="Cargando categorías…" />
         ) : docs.length === 0 ? (
           <div className="empty" role="status">
             <svg

@@ -14,6 +14,7 @@ import {
 import "./NewsDetail.css";
 import AnimatedPageLayout from "../../Components/AnimatedPageLayout/AnimatedPageLayout.jsx";
 import LazyImage from "../../Components/LazyImage/LazyImage.jsx";
+import Loader from "../../Components/Loader/Loader.jsx";
 import {
   newsDetailAnimations,
   getAnimationVariant,
@@ -80,11 +81,7 @@ export default function NewsDetail() {
   }, [id]);
 
   if (loading)
-    return (
-      <div className="detail-shell">
-        <div className="loading">Cargando…</div>
-      </div>
-    );
+    return <Loader fullscreen message="Cargando noticia…" />;
   if (error)
     return (
       <div className="detail-shell">
