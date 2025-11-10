@@ -31,7 +31,7 @@ const Nav = ({ user, role }) => {
 
   return (
     <header className="news-nav fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
-      <div className="nav-container container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="nav-container w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="brand">
           <Link to="/home" className="brand-link" aria-label="Ir al inicio">
             <span className="brand-badge">UDLA</span>
