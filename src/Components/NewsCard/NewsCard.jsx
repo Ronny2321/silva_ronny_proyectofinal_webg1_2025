@@ -6,7 +6,7 @@ import { cardAnimations, getAnimationVariant } from "../../utils/animations";
 import LazyImage from "../Animations/LazyImage/LazyImage.jsx";
 import "./NewsCard.css";
 
-const NewsCard = ({ news }) => {
+const NewsCard = ({ news, blockIfUnpublished = false, onBlocked }) => {
   const fmtDate = (val) => {
     if (!val) return "";
     if (typeof val === "string") return val;
@@ -41,6 +41,13 @@ const NewsCard = ({ news }) => {
     return "";
   })();
 
+  const handleClick = (e) => {
+    if (blockIfUnpublished && estado && estado !== "Publicado") {
+      e.preventDefault();
+      onBlocked && onBlocked(news);
+    }
+  };
+
   return (
     <motion.div
       className="news-card flex flex-col rounded-xl overflow-hidden"
@@ -52,7 +59,18 @@ const NewsCard = ({ news }) => {
       viewport={{ once: true, amount: 0.2 }}
       aria-label={news.titulo || "Noticia"}
     >
-      <Link to={`/noticia/${news.id}`}>
+      <Link
+        to={`/noticia/${news.id}`}
+        onClick={handleClick}
+        aria-disabled={
+          blockIfUnpublished && estado !== "Publicado" ? true : undefined
+        }
+        title={
+          blockIfUnpublished && estado !== "Publicado"
+            ? "La noticia aún no está publicada"
+            : undefined
+        }
+      >
         <div className="card-figure w-full aspect-video bg-slate-200">
           {imgSrc ? (
             <LazyImage

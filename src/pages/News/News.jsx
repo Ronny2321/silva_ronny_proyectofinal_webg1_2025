@@ -36,6 +36,8 @@ const News = ({ role }) => {
   const [savingId, setSavingId] = useState(null);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [statusModalText, setStatusModalText] = useState("");
+  const [blockedModalOpen, setBlockedModalOpen] = useState(false);
+  const [blockedNews, setBlockedNews] = useState(null);
 
   const listTopRef = useRef(null);
   const didMountRef = useRef(false);
@@ -155,7 +157,7 @@ const News = ({ role }) => {
     setPage(1);
   };
 
-  const isLoading = !uid && news.length === 0; 
+  const isLoading = !uid && news.length === 0;
 
   return (
     <AnimatedPageLayout className="news-page">
@@ -287,7 +289,14 @@ const News = ({ role }) => {
         {isLoading && <Loader message="Cargando noticias…" />}
         {paginated.map((n) => (
           <div className="card-wrap" key={n.id}>
-            <NewsCard news={n} />
+            <NewsCard
+              news={n}
+              blockIfUnpublished
+              onBlocked={(news) => {
+                setBlockedNews(news);
+                setBlockedModalOpen(true);
+              }}
+            />
             <div className="card-actions">
               {role === "Editor" ? (
                 (() => {
@@ -424,6 +433,46 @@ const News = ({ role }) => {
               {statusModalText || "Estado actualizado correctamente"}
             </p>
           </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={blockedModalOpen}
+        onClose={() => setBlockedModalOpen(false)}
+        title="Noticia no publicada"
+        maxWidth="sm"
+        primaryText="Entendido"
+        onPrimary={() => setBlockedModalOpen(false)}
+      >
+        <div className="blocked-news-modal">
+          <p style={{ marginBottom: 8 }}>
+            Esta noticia aún no está publicada, por lo cual no se puede
+            visualizar su contenido público.
+          </p>
+          {blockedNews && (
+            <ul className="blocked-details">
+              <li>
+                <strong>Título:</strong> {blockedNews.titulo || "(Sin título)"}
+              </li>
+              <li>
+                <strong>Estado actual:</strong>{" "}
+                {blockedNews.estado || blockedNews.status || "Edición"}
+              </li>
+              {blockedNews.autor && (
+                <li>
+                  <strong>Autor:</strong> {blockedNews.autor}
+                </li>
+              )}
+            </ul>
+          )}
+          {role !== "Editor" &&
+            blockedNews &&
+            blockedNews.estado !== "Publicado" && (
+              <p style={{ marginTop: 12, fontSize: 14 }}>
+                Puedes continuar editándola usando el botón "Editar" de la
+                tarjeta hasta que un editor la publique.
+              </p>
+            )}
         </div>
       </Modal>
     </AnimatedPageLayout>
